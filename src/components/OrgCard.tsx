@@ -7,9 +7,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function OrgCard({ name, title }: { name: string; title: string }) {
+export default function OrgCard({
+  id,
+  name,
+  title,
+}: {
+  id: string;
+  name: string;
+  title: string;
+}) {
   return (
-    <Card>
+    <Card id={id}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{name}</CardDescription>

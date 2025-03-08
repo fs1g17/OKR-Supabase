@@ -5,7 +5,16 @@ import useWindowSize from "@/app/hooks/useWindowSize";
 import OrgCard from "./OrgCard";
 import { createRoot } from 'react-dom/client';
 
-const data = {
+interface DataNode {
+  id: number;
+  data: {
+    name: string;
+    title: string;
+  }
+  children: DataNode[]
+};
+
+const data: DataNode = {
   id: 0,
   data: {
     name: "Bob McRob",
@@ -17,7 +26,8 @@ const data = {
       data: {
         name: "Joseph Hubbard",
         title: "Poop Scooper"
-      }
+      },
+      children: []
     }
   ]
 }
@@ -53,14 +63,15 @@ export default function OrgChart() {
       .attr("stroke-width", 2)
       .attr("fill", "none");
 
-    const nodes = svg.selectAll("node")
-      .data([root,root.descendants()])
+    const nodes = svg
+      .selectAll(".node")
+      .data(root.descendants())
       .enter()
       .append("foreignObject")
-      .attr("width", 100)
-      .attr("height", 60)
-      // .attr("x", d => ((d as any).x as number) - 50)
-      // .attr("y", d => ((d as any).y as number) - 30)
+      .attr("width", 300)
+      .attr("height", 300)
+      .attr("x", d => ((d as any).x as number) - 50)
+      .attr("y", d => ((d as any).y as number) - 30)
       .append("xhtml:div")
       .style("display", "flex")
       .style("justify-content", "center")
@@ -68,23 +79,24 @@ export default function OrgChart() {
       .style("width", "100%")
       .style("height", "100%")
       .style("background", "transparent")
-      .html(d => {
-        console.log({poop:"scoop", d});
-        return `<div id="node-${(d as any).id}"></div>`
+      .html(d => `<div id="node-${d.data.id}"></div>`);
+
+      root.descendants().forEach(d => {
+        const nodeElement = document.getElementById(`node-${d.data.id}`);
+        if (nodeElement) {
+          const { name, title } = d.data.data;
+          const orgCard = <OrgCard id={`org-card-${d.data.id}`} name={name} title={title} />;
+          createRoot(nodeElement).render(orgCard);
+
+          const element = document.getElementById(`org-card-${d.data.id}`);
+          if(!element) {
+            console.log(`element with id org-card-${d.data.id} not found`);
+            return;
+          }
+          
+          console.log(`element with id org-card-${d.data.id} width: ${element.clientWidth}, height: ${element.clientHeight}`);
+        }
       });
-
-      console.log(nodes);
-
-      // [root,root.descendants()].forEach(d => {
-      //   const nodeElement = document.getElementById(`node-${(d as any).id}`);
-
-      //   console.log(nodeElement);
-      //   // if (nodeElement) {
-      //   //   const { name, title } = (d as any).data;
-      //   //   const orgCard = <OrgCard name={name} title={title} />;
-      //   //   createRoot(nodeElement).render(orgCard);
-      //   // }
-      // })
 
   }, [width, height]);
 
