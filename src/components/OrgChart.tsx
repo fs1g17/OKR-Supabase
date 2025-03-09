@@ -1,31 +1,39 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { hierarchy, linkVertical, select, tree } from "d3";
 import useWindowSize from "@/app/hooks/useWindowSize";
 import OrgCard from "./OrgCard";
 import { createRoot } from "react-dom/client";
 
-interface DataNode {
-  id: number;
-  data: {
-    name: string;
-    title: string;
-  };
-  children: DataNode[];
-}
-
-const data: DataNode = {
+const initialData: DataNode = {
   id: 0,
   data: {
-    name: "Bob McRob",
     title: "CEO",
+    description: "Bob McRob",
   },
   children: [
     {
       id: 1,
       data: {
-        name: "Joseph Hubbard",
         title: "Poop Scooper",
+        description: "Joseph Hubbard",
+      },
+      children: [
+        {
+          id: 4,
+          data: {
+            title: "SOmething",
+            description: "something else",
+          },
+          children: []
+        }
+      ],
+    },
+    {
+      id: 3,
+      data: {
+        title: "Cleaner",
+        description: "Skibidy Toilet",
       },
       children: [],
     },
@@ -35,6 +43,7 @@ const data: DataNode = {
 export default function OrgChart() {
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
+  const [data, setData] = useState<DataNode>(initialData);
 
   useEffect(() => {
     if (!svgRef) return;
@@ -84,9 +93,13 @@ export default function OrgChart() {
     root.descendants().forEach((d) => {
       const nodeElement = document.getElementById(`node-${d.data.id}`);
       if (nodeElement) {
-        const { name, title } = d.data.data;
+        const { title, description } = d.data.data;
         const orgCard = (
-          <OrgCard id={`org-card-${d.data.id}`} name={name} title={title} />
+          <OrgCard
+            id={`org-card-${d.data.id}`}
+            name={description}
+            title={title}
+          />
         );
         createRoot(nodeElement).render(orgCard);
 

@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "./ui/button";
 
 export default function OrgCard({
   id,
@@ -22,6 +23,9 @@ export default function OrgCard({
         <CardTitle>{title}</CardTitle>
         <CardDescription>{name}</CardDescription>
       </CardHeader>
+      <CardFooter>
+        <Button>Update</Button>
+      </CardFooter>
     </Card>
   );
 }
