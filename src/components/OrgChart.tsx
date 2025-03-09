@@ -3,34 +3,34 @@ import React, { useEffect, useRef } from "react";
 import { hierarchy, linkVertical, select, tree } from "d3";
 import useWindowSize from "@/app/hooks/useWindowSize";
 import OrgCard from "./OrgCard";
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 
 interface DataNode {
   id: number;
   data: {
     name: string;
     title: string;
-  }
-  children: DataNode[]
-};
+  };
+  children: DataNode[];
+}
 
 const data: DataNode = {
   id: 0,
   data: {
     name: "Bob McRob",
-    title: "CEO"
+    title: "CEO",
   },
   children: [
     {
       id: 1,
       data: {
         name: "Joseph Hubbard",
-        title: "Poop Scooper"
+        title: "Poop Scooper",
       },
-      children: []
-    }
-  ]
-}
+      children: [],
+    },
+  ],
+};
 
 export default function OrgChart() {
   const svgRef = useRef(null);
@@ -68,10 +68,10 @@ export default function OrgChart() {
       .data(root.descendants())
       .enter()
       .append("foreignObject")
-      .attr("width", 300)
-      .attr("height", 300)
-      .attr("x", d => ((d as any).x as number) - 50)
-      .attr("y", d => ((d as any).y as number) - 30)
+      .attr("width", 100)
+      .attr("height", 50)
+      .attr("x", (d) => (d as any).x as number)
+      .attr("y", (d) => (d as any).y as number)
       .append("xhtml:div")
       .style("display", "flex")
       .style("justify-content", "center")
@@ -79,25 +79,38 @@ export default function OrgChart() {
       .style("width", "100%")
       .style("height", "100%")
       .style("background", "transparent")
-      .html(d => `<div id="node-${d.data.id}"></div>`);
+      .html((d) => `<div id="node-${d.data.id}"></div>`);
 
-      root.descendants().forEach(d => {
-        const nodeElement = document.getElementById(`node-${d.data.id}`);
-        if (nodeElement) {
-          const { name, title } = d.data.data;
-          const orgCard = <OrgCard id={`org-card-${d.data.id}`} name={name} title={title} />;
-          createRoot(nodeElement).render(orgCard);
+    root.descendants().forEach((d) => {
+      const nodeElement = document.getElementById(`node-${d.data.id}`);
+      if (nodeElement) {
+        const { name, title } = d.data.data;
+        const orgCard = (
+          <OrgCard id={`org-card-${d.data.id}`} name={name} title={title} />
+        );
+        createRoot(nodeElement).render(orgCard);
 
-          const element = document.getElementById(`org-card-${d.data.id}`);
-          if(!element) {
-            console.log(`element with id org-card-${d.data.id} not found`);
-            return;
+        const observer = new MutationObserver(() => {
+          const cardSize = nodeElement.getBoundingClientRect();
+          const parent = select(nodeElement.parentNode?.parentNode as Element);
+
+          console.log("inside here bitch");
+
+          if (cardSize.width > 0 && cardSize.height > 0) {
+            //observer.disconnect();
+
+            console.log("got good cardSize!");
+            console.log({ width: cardSize.width, height: cardSize.height });
+            parent
+              .attr("width", cardSize.width)
+              .attr("height", cardSize.height)
+              .attr("x", (d) => ((d as any).x as number) - cardSize.width / 2)
+              .attr("y", (d) => (d as any).y as number);
           }
-          
-          console.log(`element with id org-card-${d.data.id} width: ${element.clientWidth}, height: ${element.clientHeight}`);
-        }
-      });
-
+        });
+        observer.observe(nodeElement, { childList: true, subtree: true });
+      }
+    });
   }, [width, height]);
 
   return <svg ref={svgRef} />;

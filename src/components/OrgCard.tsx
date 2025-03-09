@@ -17,7 +17,7 @@ export default function OrgCard({
   title: string;
 }) {
   return (
-    <Card id={id}>
+    <Card id={id} className="min-w-[200px]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{name}</CardDescription>
