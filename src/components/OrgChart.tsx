@@ -4,36 +4,37 @@ import { hierarchy, linkVertical, select, tree } from "d3";
 import useWindowSize from "@/app/hooks/useWindowSize";
 import OrgCard from "./OrgCard";
 import { createRoot } from "react-dom/client";
+import { updateNodeById } from "@/utils/graph";
 
 const initialData: DataNode = {
   id: 0,
   data: {
     title: "CEO",
-    description: "Bob McRob",
+    name: "Bob McRob",
   },
   children: [
     {
       id: 1,
       data: {
         title: "Poop Scooper",
-        description: "Joseph Hubbard",
+        name: "Joseph Hubbard",
       },
       children: [
         {
           id: 4,
           data: {
             title: "SOmething",
-            description: "something else",
+            name: "something else",
           },
-          children: []
-        }
+          children: [],
+        },
       ],
     },
     {
       id: 3,
       data: {
         title: "Cleaner",
-        description: "Skibidy Toilet",
+        name: "Skibidy Toilet",
       },
       children: [],
     },
@@ -44,6 +45,17 @@ export default function OrgChart() {
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
   const [data, setData] = useState<DataNode>(initialData);
+
+  const updateCardFactory = (id: number) => {
+    return ({ name, title }: { name: string; title: string }) => {
+      // const JSON.parse(JSON.stringify(ingredientsList))
+      setData((prev) => {
+        const deepCopy = JSON.parse(JSON.stringify(prev));
+        updateNodeById(id, deepCopy, { id, data: { name, title } });
+        return deepCopy;
+      });
+    };
+  };
 
   useEffect(() => {
     if (!svgRef) return;
@@ -93,12 +105,13 @@ export default function OrgChart() {
     root.descendants().forEach((d) => {
       const nodeElement = document.getElementById(`node-${d.data.id}`);
       if (nodeElement) {
-        const { title, description } = d.data.data;
+        const { title, name } = d.data.data;
         const orgCard = (
           <OrgCard
             id={`org-card-${d.data.id}`}
-            name={description}
+            name={name}
             title={title}
+            updateCard={updateCardFactory(d.data.id)}
           />
         );
         createRoot(nodeElement).render(orgCard);
@@ -124,7 +137,7 @@ export default function OrgChart() {
         observer.observe(nodeElement, { childList: true, subtree: true });
       }
     });
-  }, [width, height]);
+  }, [width, height, data]);
 
   return <svg ref={svgRef} />;
 }

@@ -2,7 +2,7 @@ interface DataNode {
   id: number;
   data: {
     title: string;
-    description: string;
+    name: string;
   };
   children: DataNode[];
 }
