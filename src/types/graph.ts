@@ -6,3 +6,8 @@ interface DataNode {
   };
   children: DataNode[];
 }
+
+interface OkrData {
+  counter: number;
+  data: DataNode;
+}

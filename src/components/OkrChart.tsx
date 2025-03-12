@@ -4,54 +4,60 @@ import { hierarchy, linkVertical, select, tree } from "d3";
 import useWindowSize from "@/app/hooks/useWindowSize";
 import OkrCard from "./OkrCard";
 import { createRoot } from "react-dom/client";
-import { updateNodeById } from "@/utils/graph";
+import { addChildToNodeById, updateNodeById } from "@/utils/graph";
 
-const initialData: DataNode = {
+const initialDataNode: DataNode = {
   id: 0,
   data: {
-    objective: "CEO",
-    description: "Bob McRob",
+    objective: "Backend",
+    description: "become a better backend engineer",
   },
-  children: [
-    {
-      id: 1,
-      data: {
-        objective: "Poop Scooper",
-        description: "Joseph Hubbard",
-      },
-      children: [
-        {
-          id: 4,
-          data: {
-            objective: "SOmething",
-            description: "something else",
-          },
-          children: [],
-        },
-      ],
-    },
-    {
-      id: 3,
-      data: {
-        objective: "Cleaner",
-        description: "Skibidy Toilet",
-      },
-      children: [],
-    },
-  ],
+  children: [],
+};
+
+const initialData: OkrData = {
+  counter: 1,
+  data: initialDataNode,
 };
 
 export default function OkrChart() {
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
-  const [data, setData] = useState<DataNode>(initialData);
+  const [data, setData] = useState<OkrData>(initialData);
 
   const updateCardFactory = (id: number) => {
-    return ({ description, objective }: { description: string; objective: string }) => {
-      // const JSON.parse(JSON.stringify(ingredientsList))
+    return ({
+      description,
+      objective,
+    }: {
+      description: string;
+      objective: string;
+    }) => {
       setData((prev) => {
-        const deepCopy = JSON.parse(JSON.stringify(prev));
-        updateNodeById(id, deepCopy, { id, data: { description, objective } });
+        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
+        updateNodeById(id, deepCopy.data, {
+          id,
+          data: { description, objective },
+        });
+        return deepCopy;
+      });
+    };
+  };
+
+  const addKeyResultFactory = (id: number) => {
+    return ({
+      description,
+      objective,
+    }: {
+      description: string;
+      objective: string;
+    }) => {
+      setData((prev) => {
+        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
+        addChildToNodeById(id, deepCopy, {
+          id,
+          data: { description, objective },
+        });
         return deepCopy;
       });
     };
@@ -65,7 +71,7 @@ export default function OkrChart() {
     svg.selectAll("*").remove();
     svg.attr("width", width).attr("height", height);
 
-    const root = hierarchy(data);
+    const root = hierarchy(data.data);
     const treeLayout = tree().size([width - 100, height - 100]);
     treeLayout(root);
     const paths = treeLayout(root).links();
@@ -112,6 +118,7 @@ export default function OkrChart() {
             description={description}
             objective={objective}
             updateCard={updateCardFactory(d.data.id)}
+            addKeyResult={addKeyResultFactory(d.data.id)}
           />
         );
         createRoot(nodeElement).render(orgCard);

@@ -17,3 +17,16 @@ export function updateNodeById(id: number, root: DataNode, data: Omit<DataNode, 
 
   node.data = data.data;
 }
+
+export function addChildToNodeById(id: number, okrData: OkrData, data: Omit<DataNode, "children">): void {
+  const node = getNodeById(okrData.data, id);
+
+  if(!node) return; 
+
+  node.children.push({
+    id: okrData.counter,
+    data: data.data,
+    children: []
+  });
+  okrData.counter += 1;
+}

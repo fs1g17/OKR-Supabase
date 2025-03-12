@@ -8,14 +8,16 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import UpdateCardDialog from "./UpdateCardDialog";
-import { PenIcon } from "lucide-react";
+import { PenIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
+import AddKeyResultDialog from "./AddKeyResultDialog";
 
 export default function OkrCard({
   id,
   description,
   objective,
   updateCard,
+  addKeyResult,
 }: {
   id: string;
   description: string;
@@ -27,35 +29,59 @@ export default function OkrCard({
     description: string;
     objective: string;
   }) => void;
+  addKeyResult: ({
+    description,
+    objective,
+  }: {
+    description: string;
+    objective: string;
+  }) => void;
 }) {
-  const [open, setOpen] = useState<boolean>(false);
+  const [updateCardDialogOpen, setUpdateCardDialogOpen] =
+    useState<boolean>(false);
+  const [addKeyResultDialogOpen, setAddKeyResultDialogOpen] =
+    useState<boolean>(false);
 
   return (
     <>
       <Card id={id} className="min-w-[200px]">
         <Button
-          variant="outline"
-          className="absolute top-5 right-5 rounded-full p-0 w-9 h-9 bg-secondary"
-          onClick={() => setOpen(true)}
+          variant="ghost"
+          className="absolute top-1 right-1 rounded-full p-0 w-9 h-9"
+          onClick={() => setUpdateCardDialogOpen(true)}
         >
           <PenIcon />
         </Button>
         <CardHeader>
-          <CardTitle>{objective}</CardTitle>
+          <CardTitle>Objective: {objective}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardFooter></CardFooter>
+
+        <CardFooter>
+          <Button onClick={() => setAddKeyResultDialogOpen(true)}>
+            <PlusIcon />
+            Add Key Result
+          </Button>
+        </CardFooter>
       </Card>
 
-      {open && (
+      {updateCardDialogOpen && (
         <UpdateCardDialog
-          closeDialog={() => setOpen(false)}
+          open={updateCardDialogOpen}
+          closeDialog={() => setUpdateCardDialogOpen(false)}
           {...{
             updateCard,
-            open,
             objective,
             description,
           }}
+        />
+      )}
+
+      {addKeyResultDialogOpen && (
+        <AddKeyResultDialog
+          open={addKeyResultDialogOpen}
+          closeDialog={() => setAddKeyResultDialogOpen(false)}
+          addKeyResult={addKeyResult}
         />
       )}
     </>

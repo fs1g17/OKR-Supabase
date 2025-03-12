@@ -10,18 +10,14 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
-export default function UpdateCardDialog({
+export default function AddKeyResultDialog({
   open,
-  objective,
-  description,
   closeDialog,
-  updateCard,
+  addKeyResult,
 }: {
   open: boolean;
-  objective: string;
-  description: string;
   closeDialog: () => void;
-  updateCard: ({
+  addKeyResult: ({
     description,
     objective,
   }: {
@@ -29,44 +25,44 @@ export default function UpdateCardDialog({
     objective: string;
   }) => void;
 }) {
-  const [newObjective, setNewObjective] = useState<string>(objective);
-  const [newDescription, setNewDescription] = useState<string>(description);
+  const [keyResult, setKeyResult] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   return (
     <Dialog open={open} onOpenChange={closeDialog}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update Objective</DialogTitle>
+          <DialogTitle>Add Key Result</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col w-full gap-y-2.5">
           <div className="grid flex-1 gap-2">
-            <Label htmlFor="link">Objective</Label>
+            <Label htmlFor="keyResult">Key Result</Label>
             <Input
-              id="link"
-              value={newObjective}
-              onChange={(e) => setNewObjective(e.currentTarget.value)}
+              id="keyResult"
+              value={keyResult}
+              onChange={(e) => setKeyResult(e.currentTarget.value)}
             />
           </div>
           <div className="grid flex-1 gap-2">
             <Label htmlFor="description">Description</Label>
             <Input
               id="description"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.currentTarget.value)}
+              value={description}
+              onChange={(e) => setDescription(e.currentTarget.value)}
             />
           </div>
         </div>
         <DialogFooter>
           <Button
             onClick={() => {
-              updateCard({
-                description: newDescription,
-                objective: newObjective,
+              addKeyResult({
+                objective: keyResult,
+                description,
               });
               closeDialog();
             }}
           >
-            Update
+            Add Key Result
           </Button>
         </DialogFooter>
       </DialogContent>
