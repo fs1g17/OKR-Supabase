@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import UpdateCardDialog from "./UpdateCardDialog";
+import { PenIcon } from "lucide-react";
+import { useState } from "react";
 
 export default function OkrCard({
   id,
@@ -18,20 +20,44 @@ export default function OkrCard({
   id: string;
   description: string;
   objective: string;
-  updateCard: ({ description, objective }: { description: string; objective: string }) => void;
+  updateCard: ({
+    description,
+    objective,
+  }: {
+    description: string;
+    objective: string;
+  }) => void;
 }) {
-  console.log(updateCard);
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
-    <Card id={id} className="min-w-[200px]">
-      <CardHeader>
-        <CardTitle>{objective}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardFooter>
-        <UpdateCardDialog updateCard={updateCard}>
-          <Button>Update</Button>
-        </UpdateCardDialog>
-      </CardFooter>
-    </Card>
+    <>
+      <Card id={id} className="min-w-[200px]">
+        <Button
+          variant="outline"
+          className="absolute top-5 right-5 rounded-full p-0 w-9 h-9 bg-secondary"
+          onClick={() => setOpen(true)}
+        >
+          <PenIcon />
+        </Button>
+        <CardHeader>
+          <CardTitle>{objective}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardFooter></CardFooter>
+      </Card>
+
+      {open && (
+        <UpdateCardDialog
+          closeDialog={() => setOpen(false)}
+          {...{
+            updateCard,
+            open,
+            objective,
+            description,
+          }}
+        />
+      )}
+    </>
   );
 }

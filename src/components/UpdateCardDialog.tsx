@@ -14,10 +14,16 @@ import { Button } from "./ui/button";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function UpdateCardDialog({
-  children,
+  open,
+  objective,
+  description,
+  closeDialog,
   updateCard,
 }: {
-  children: React.ReactNode;
+  open: boolean;
+  objective: string;
+  description: string;
+  closeDialog: () => void;
   updateCard: ({
     description,
     objective,
@@ -26,12 +32,11 @@ export default function UpdateCardDialog({
     objective: string;
   }) => void;
 }) {
-  const [objective, setObjective] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [newObjective, setNewObjective] = useState<string>(objective);
+  const [newDescription, setNewDescription] = useState<string>(description);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={open} onOpenChange={closeDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Update person</DialogTitle>
@@ -41,22 +46,30 @@ export default function UpdateCardDialog({
             <Label htmlFor="link">Objective</Label>
             <Input
               id="link"
-              value={objective}
-              onChange={(e) => setObjective(e.currentTarget.value)}
+              value={newObjective}
+              onChange={(e) => setNewObjective(e.currentTarget.value)}
             />
           </div>
           <div className="grid flex-1 gap-2">
             <Label htmlFor="description">Description</Label>
             <Input
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.currentTarget.value)}
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.currentTarget.value)}
             />
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button onClick={() => updateCard({ description, objective })}>
+            <Button
+              onClick={() => {
+                updateCard({
+                  description: newDescription,
+                  objective: newObjective,
+                });
+                closeDialog();
+              }}
+            >
               Update
             </Button>
           </DialogClose>
