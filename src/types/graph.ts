@@ -1,8 +1,8 @@
 interface DataNode {
   id: number;
   data: {
-    title: string;
-    name: string;
+    objective: string;
+    description: string;
   };
   children: DataNode[];
 }

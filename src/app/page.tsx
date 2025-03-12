@@ -1,7 +1,7 @@
-import OrgChart from "@/components/OrgChart";
+import OkrChart from "@/components/OkrChart";
 
 export default function Home() {
   return (
-    <OrgChart />
+    <OkrChart />
   );
 }

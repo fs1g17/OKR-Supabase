@@ -11,16 +11,23 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useCallback, useState } from "react";
 import { Button } from "./ui/button";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function UpdateCardDialog({
   children,
   updateCard,
 }: {
   children: React.ReactNode;
-  updateCard: ({ name, title }: { name: string; title: string }) => void;
+  updateCard: ({
+    description,
+    objective,
+  }: {
+    description: string;
+    objective: string;
+  }) => void;
 }) {
-  const [title, setTitle] = useState<string>("");
-  const [name, setName] = useState<string>("");
+  const [objective, setObjective] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   return (
     <Dialog>
@@ -31,24 +38,28 @@ export default function UpdateCardDialog({
         </DialogHeader>
         <div className="flex flex-col w-full gap-y-2.5">
           <div className="grid flex-1 gap-2">
-            <Label htmlFor="link">Title</Label>
+            <Label htmlFor="link">Objective</Label>
             <Input
               id="link"
-              value={title}
-              onChange={(e) => setTitle(e.currentTarget.value)}
+              value={objective}
+              onChange={(e) => setObjective(e.currentTarget.value)}
             />
           </div>
           <div className="grid flex-1 gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="description">Description</Label>
             <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.currentTarget.value)}
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.currentTarget.value)}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={() => updateCard({ name, title })}>Update</Button>
+          <DialogClose asChild>
+            <Button onClick={() => updateCard({ description, objective })}>
+              Update
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

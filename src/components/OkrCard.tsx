@@ -9,23 +9,23 @@ import {
 import { Button } from "./ui/button";
 import UpdateCardDialog from "./UpdateCardDialog";
 
-export default function OrgCard({
+export default function OkrCard({
   id,
-  name,
-  title,
+  description,
+  objective,
   updateCard,
 }: {
   id: string;
-  name: string;
-  title: string;
-  updateCard: ({ name, title }: { name: string; title: string }) => void;
+  description: string;
+  objective: string;
+  updateCard: ({ description, objective }: { description: string; objective: string }) => void;
 }) {
   console.log(updateCard);
   return (
     <Card id={id} className="min-w-[200px]">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{name}</CardDescription>
+        <CardTitle>{objective}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardFooter>
         <UpdateCardDialog updateCard={updateCard}>

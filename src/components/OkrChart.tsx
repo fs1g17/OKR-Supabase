@@ -2,29 +2,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import { hierarchy, linkVertical, select, tree } from "d3";
 import useWindowSize from "@/app/hooks/useWindowSize";
-import OrgCard from "./OrgCard";
+import OkrCard from "./OkrCard";
 import { createRoot } from "react-dom/client";
 import { updateNodeById } from "@/utils/graph";
 
 const initialData: DataNode = {
   id: 0,
   data: {
-    title: "CEO",
-    name: "Bob McRob",
+    objective: "CEO",
+    description: "Bob McRob",
   },
   children: [
     {
       id: 1,
       data: {
-        title: "Poop Scooper",
-        name: "Joseph Hubbard",
+        objective: "Poop Scooper",
+        description: "Joseph Hubbard",
       },
       children: [
         {
           id: 4,
           data: {
-            title: "SOmething",
-            name: "something else",
+            objective: "SOmething",
+            description: "something else",
           },
           children: [],
         },
@@ -33,25 +33,25 @@ const initialData: DataNode = {
     {
       id: 3,
       data: {
-        title: "Cleaner",
-        name: "Skibidy Toilet",
+        objective: "Cleaner",
+        description: "Skibidy Toilet",
       },
       children: [],
     },
   ],
 };
 
-export default function OrgChart() {
+export default function OkrChart() {
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
   const [data, setData] = useState<DataNode>(initialData);
 
   const updateCardFactory = (id: number) => {
-    return ({ name, title }: { name: string; title: string }) => {
+    return ({ description, objective }: { description: string; objective: string }) => {
       // const JSON.parse(JSON.stringify(ingredientsList))
       setData((prev) => {
         const deepCopy = JSON.parse(JSON.stringify(prev));
-        updateNodeById(id, deepCopy, { id, data: { name, title } });
+        updateNodeById(id, deepCopy, { id, data: { description, objective } });
         return deepCopy;
       });
     };
@@ -105,12 +105,12 @@ export default function OrgChart() {
     root.descendants().forEach((d) => {
       const nodeElement = document.getElementById(`node-${d.data.id}`);
       if (nodeElement) {
-        const { title, name } = d.data.data;
+        const { objective, description } = d.data.data;
         const orgCard = (
-          <OrgCard
+          <OkrCard
             id={`org-card-${d.data.id}`}
-            name={name}
-            title={title}
+            description={description}
+            objective={objective}
             updateCard={updateCardFactory(d.data.id)}
           />
         );
