@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { hierarchy, linkVertical, select, tree } from "d3";
+import { hierarchy, linkVertical, select, tree, zoom } from "d3";
 import useWindowSize from "@/app/hooks/useWindowSize";
 import OkrCard from "./OkrCard";
 import { createRoot } from "react-dom/client";
@@ -71,6 +71,19 @@ export default function OkrChart() {
     svg.selectAll("*").remove();
     svg.attr("width", width).attr("height", height);
 
+    const g = svg
+    .append("g")
+    //.attr("transform", `translate(${width / 2}, 50)`);
+
+    // D3 zoom behavior
+    const zoomBehavior = zoom()
+      .scaleExtent([0.5, 2]) // Zoom limits (min 50%, max 200%)
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
+
+    svg.call(zoomBehavior as any); // apply zoom
+
     const root = hierarchy(data.data);
     const treeLayout = tree().size([width - 100, height - 100]);
     treeLayout(root);
@@ -80,7 +93,7 @@ export default function OkrChart() {
       .x((d) => (d as any).x)
       .y((d) => (d as any).y);
 
-    svg
+    g
       .selectAll("path")
       .data(paths)
       .enter()
@@ -90,7 +103,7 @@ export default function OkrChart() {
       .attr("stroke-width", 2)
       .attr("fill", "none");
 
-    const nodes = svg
+    g
       .selectAll(".node")
       .data(root.descendants())
       .enter()
@@ -130,7 +143,7 @@ export default function OkrChart() {
           console.log("inside here bitch");
 
           if (cardSize.width > 0 && cardSize.height > 0) {
-            //observer.disconnect();
+            observer.disconnect();
 
             console.log("got good cardSize!");
             console.log({ width: cardSize.width, height: cardSize.height });
