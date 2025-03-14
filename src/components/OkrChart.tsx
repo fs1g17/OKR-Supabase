@@ -71,18 +71,15 @@ export default function OkrChart() {
     svg.selectAll("*").remove();
     svg.attr("width", width).attr("height", height);
 
-    const g = svg
-    .append("g")
-    //.attr("transform", `translate(${width / 2}, 50)`);
+    const g = svg.append("g")
 
-    // D3 zoom behavior
     const zoomBehavior = zoom()
-      .scaleExtent([0.5, 2]) // Zoom limits (min 50%, max 200%)
+      .scaleExtent([0.5, 2])
       .on("zoom", (event) => {
         g.attr("transform", event.transform);
       });
 
-    svg.call(zoomBehavior as any); // apply zoom
+    svg.call(zoomBehavior as any);
 
     const root = hierarchy(data.data);
     const treeLayout = tree().size([width - 100, height - 100]);
