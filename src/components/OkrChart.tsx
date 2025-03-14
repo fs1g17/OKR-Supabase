@@ -71,7 +71,7 @@ export default function OkrChart() {
     svg.selectAll("*").remove();
     svg.attr("width", width).attr("height", height);
 
-    const g = svg.append("g")
+    const g = svg.append("g");
 
     const zoomBehavior = zoom()
       .scaleExtent([0.5, 2])
@@ -136,14 +136,8 @@ export default function OkrChart() {
         const observer = new MutationObserver(() => {
           const cardSize = nodeElement.getBoundingClientRect();
           const parent = select(nodeElement.parentNode?.parentNode as Element);
-
-          console.log("inside here bitch");
-
           if (cardSize.width > 0 && cardSize.height > 0) {
             observer.disconnect();
-
-            console.log("got good cardSize!");
-            console.log({ width: cardSize.width, height: cardSize.height });
             parent
               .attr("width", cardSize.width)
               .attr("height", cardSize.height)
