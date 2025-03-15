@@ -1,11 +1,13 @@
 "use client";
+import { createRoot } from "react-dom/client";
 import React, { useEffect, useRef, useState } from "react";
 import { hierarchy, linkVertical, select, tree, zoom } from "d3";
-import useWindowSize from "@/app/hooks/useWindowSize";
+
 import OkrCard from "./OkrCard";
-import { createRoot } from "react-dom/client";
-import { addChildToNodeById, updateNodeById } from "@/utils/graph";
 import OkrChartSpread from "./OkrChartSpread";
+
+import useWindowSize from "@/app/hooks/useWindowSize";
+import { addChildToNodeById, updateNodeById } from "@/utils/graph";
 
 const initialDataNode: DataNode = {
   id: 0,
@@ -152,7 +154,11 @@ export default function OkrChart() {
         observer.observe(nodeElement, { childList: true, subtree: true });
       }
     });
-  }, [width, height, data, multiplier]);
+
+    return () => {
+      svg.on(".zoom", null);
+    };
+}, [width, height, data, multiplier]);
 
   return (
     <div className="relative h-[100vh] overflow-hidden">
