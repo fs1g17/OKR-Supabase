@@ -5,6 +5,7 @@ import useWindowSize from "@/app/hooks/useWindowSize";
 import OkrCard from "./OkrCard";
 import { createRoot } from "react-dom/client";
 import { addChildToNodeById, updateNodeById } from "@/utils/graph";
+import OkrChartSpread from "./OkrChartSpread";
 
 const initialDataNode: DataNode = {
   id: 0,
@@ -24,6 +25,7 @@ export default function OkrChart() {
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
   const [data, setData] = useState<OkrData>(initialData);
+  const [multiplier, setMultiplier] = useState<number>(1);
 
   const updateCardFactory = (id: number) => {
     return ({
@@ -69,7 +71,8 @@ export default function OkrChart() {
 
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
-    svg.attr("width", width).attr("height", height);
+
+    svg.attr("width", width * multiplier).attr("height", height * multiplier);
 
     const g = svg.append("g");
 
@@ -82,7 +85,10 @@ export default function OkrChart() {
     svg.call(zoomBehavior as any);
 
     const root = hierarchy(data.data);
-    const treeLayout = tree().size([width - 100, height - 100]);
+    const treeLayout = tree().size([
+      width * multiplier - 100,
+      height - 200,
+    ]);
     treeLayout(root);
     const paths = treeLayout(root).links();
 
@@ -90,8 +96,7 @@ export default function OkrChart() {
       .x((d) => (d as any).x)
       .y((d) => (d as any).y);
 
-    g
-      .selectAll("path")
+    g.selectAll("path")
       .data(paths)
       .enter()
       .append("path")
@@ -100,8 +105,7 @@ export default function OkrChart() {
       .attr("stroke-width", 2)
       .attr("fill", "none");
 
-    g
-      .selectAll(".node")
+    g.selectAll(".node")
       .data(root.descendants())
       .enter()
       .append("foreignObject")
@@ -148,7 +152,14 @@ export default function OkrChart() {
         observer.observe(nodeElement, { childList: true, subtree: true });
       }
     });
-  }, [width, height, data]);
+  }, [width, height, data, multiplier]);
 
-  return <svg ref={svgRef} />;
+  return (
+    <div className="relative h-[100vh] overflow-hidden">
+      <svg ref={svgRef} className="absolute top-0 left-0" />
+      <div className="absolute bottom-2 right-2">
+        <OkrChartSpread setSpread={setMultiplier} />
+      </div>
+    </div>
+  );
 }
