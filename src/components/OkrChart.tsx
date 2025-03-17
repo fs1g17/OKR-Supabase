@@ -6,25 +6,10 @@ import { hierarchy, linkVertical, select, tree, zoom } from "d3";
 import OkrCard from "./OkrCard";
 import OkrChartSpread from "./OkrChartSpread";
 
-import useWindowSize from "@/app/hooks/useWindowSize";
+import useWindowSize from "@/hooks/useWindowSize";
 import { addChildToNodeById, updateNodeById } from "@/utils/graph";
 
-const initialDataNode: DataNode = {
-  id: 0,
-  data: {
-    objective: "Backend",
-    description: "become a better backend engineer",
-  },
-  children: [],
-};
-
-const initialData: OkrData = {
-  name: "smth",
-  counter: 1,
-  data: initialDataNode,
-};
-
-export default function OkrChart() {
+export default function OkrChart({initialData}:{initialData: OkrData}) {
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
   const [data, setData] = useState<OkrData>(initialData);
