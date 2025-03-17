@@ -8,6 +8,7 @@ interface DataNode {
 }
 
 interface OkrData {
+  name: string;
   counter: number;
   data: DataNode;
 }

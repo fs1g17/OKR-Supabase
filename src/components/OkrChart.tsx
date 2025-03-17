@@ -19,6 +19,7 @@ const initialDataNode: DataNode = {
 };
 
 const initialData: OkrData = {
+  name: "smth",
   counter: 1,
   data: initialDataNode,
 };
