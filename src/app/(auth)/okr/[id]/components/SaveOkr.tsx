@@ -1,7 +1,31 @@
-import { Button } from "@/components/ui/button";
+"use client";
 
-export default function SaveOkr() {
-  return(
-    <Button>Save</Button>
-  )
+import { Button } from "@/components/ui/button";
+import { useRef } from "react";
+import { useFormState } from "react-dom";
+import { save } from "../actions/save";
+
+const initialState = {
+  success: false,
+  message: "",
+};
+
+export default function SaveOkr({ id, data }: { id: string; data: OkrData }) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [state, formAction] = useFormState(save, initialState);
+
+  const handleSubmit = async (evt: React.FormEvent) => {
+    console.log("clicked save" + id);
+    evt.preventDefault();
+    formAction(new FormData(formRef.current!));
+  };
+
+  return (
+    <form ref={formRef} onSubmit={handleSubmit}>
+      <input name="id" value={id} className="hidden" />
+      <input name="data" value={JSON.stringify(data)} className="hidden" />
+      <Button type="submit">Save</Button>
+      <div>message: {state.message}</div>
+    </form>
+  );
 }

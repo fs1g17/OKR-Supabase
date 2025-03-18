@@ -19,5 +19,5 @@ export default async function OkrPage({
     throw new Error("Failed to fetch OKR");
   }
 
-  return <OkrChart initialData={response.data.okr} />;
+  return <OkrChart id={id} initialData={response.data.okr} />;
 }

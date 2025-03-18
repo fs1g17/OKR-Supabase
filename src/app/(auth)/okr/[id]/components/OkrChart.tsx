@@ -10,7 +10,13 @@ import useWindowSize from "@/hooks/useWindowSize";
 import { addChildToNodeById, updateNodeById } from "@/utils/graph";
 import SaveOkr from "./SaveOkr";
 
-export default function OkrChart({initialData}:{initialData: OkrData}) {
+export default function OkrChart({
+  id,
+  initialData,
+}: {
+  id: string;
+  initialData: OkrData;
+}) {
   console.log(initialData);
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
@@ -75,10 +81,7 @@ export default function OkrChart({initialData}:{initialData: OkrData}) {
     svg.call(zoomBehavior as any);
 
     const root = hierarchy(data.data);
-    const treeLayout = tree().size([
-      width * multiplier - 100,
-      height - 200,
-    ]);
+    const treeLayout = tree().size([width * multiplier - 100, height - 200]);
     treeLayout(root);
     const paths = treeLayout(root).links();
 
@@ -146,7 +149,7 @@ export default function OkrChart({initialData}:{initialData: OkrData}) {
     return () => {
       svg.on(".zoom", null);
     };
-}, [width, height, data, multiplier]);
+  }, [width, height, data, multiplier]);
 
   return (
     <div className="relative h-[100vh] w-full overflow-hidden">
@@ -155,7 +158,7 @@ export default function OkrChart({initialData}:{initialData: OkrData}) {
         <OkrChartSpread setSpread={setMultiplier} />
       </div>
       <div className="absolute top-2 right-2">
-        <SaveOkr />
+        <SaveOkr id={id} data={data} />
       </div>
     </div>
   );
