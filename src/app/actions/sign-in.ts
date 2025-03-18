@@ -37,5 +37,5 @@ export async function signIn(prevState: any, formData: FormData) {
   }
 
   console.log("successfully signed in");
-  redirect("/");
+  redirect("/list");
 }

@@ -3,13 +3,14 @@ import https from "https";
 import { parse } from "set-cookie-parser";
 
 import { env } from "@/env";
+import { clientEnv } from "@/clientEnv";
 
 //TODO: look into this
 const instance = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: process.env.NODE_ENV == "development" ? false : true,
   }),
-  baseURL: env.BACKEND_BASE_URL
+  baseURL: env.BACKEND_BASE_URL,
 });
 
 export async function signUp(data: {
@@ -31,7 +32,10 @@ export async function signIn(data: {
   sameSite: string | undefined;
 }> {
   console.log(`${env.BACKEND_BASE_URL}/api/login_check`);
-  const res = await instance.post(`${env.BACKEND_BASE_URL}/api/login_check`, data);
+  const res = await instance.post(
+    `${env.BACKEND_BASE_URL}/api/login_check`,
+    data
+  );
 
   const setCookieHeader = res.headers["set-cookie"];
 
