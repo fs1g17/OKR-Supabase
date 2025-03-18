@@ -1,6 +1,6 @@
 import OkrChart from "./components/OkrChart";
 import { ssrFetch } from "@/lib/server-side-fetching";
-import { BackendResponse, OkrListType, OkrType } from "@/types/response";
+import { BackendResponse, OkrType } from "@/types/response";
 
 export default async function OkrPage({
   params,
@@ -9,7 +9,7 @@ export default async function OkrPage({
 }) {
   const id = params["id"];
 
-  const [response, error] = await ssrFetch<BackendResponse<OkrType>>(
+  const [response, error] = await ssrFetch<BackendResponse<Omit<OkrType,"id">>>(
     `/api/okr/${id}`,
     { method: "GET" }
   );

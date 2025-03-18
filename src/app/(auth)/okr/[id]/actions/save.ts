@@ -1,7 +1,7 @@
 "use server";
 
 import { ssrFetch } from "@/lib/server-side-fetching";
-import { BackendResponse, NewOkrType, OkrType } from "@/types/response";
+import { BackendResponse, OkrType } from "@/types/response";
 
 export async function save(prevState: any, formData: FormData) {
   const data = formData.get("data") as string;
@@ -9,7 +9,7 @@ export async function save(prevState: any, formData: FormData) {
 
   console.log(`saving: ${id}`);
 
-  const [response, error] = await ssrFetch<BackendResponse<NewOkrType>>(
+  const [response, error] = await ssrFetch<BackendResponse<OkrType>>(
     `/api/okr/${id}`,
     { method: "POST", body: JSON.parse(data) }
   );

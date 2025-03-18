@@ -1,10 +1,9 @@
 import { ssrFetch } from "@/lib/server-side-fetching";
-import { BackendResponse, OkrListType } from "@/types/response";
-import Link from "next/link";
+import { BackendResponse, OkrType } from "@/types/response";
 import ListOkrs from "./components/ListOkrs";
 
 export default async function List() {
-  const [response, error] = await ssrFetch<BackendResponse<OkrListType[]>>("/api/okr/list", {
+  const [response, error] = await ssrFetch<BackendResponse<Omit<OkrType,"okr">[]>>("/api/okr/list", {
     method: "GET",
   });
 

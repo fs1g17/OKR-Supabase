@@ -1,15 +1,5 @@
-export interface OkrListType {
-  id: number;
-  name: string;
-}
-
-export interface NewOkrType {
-  id: number;
-  name: string;
-  okr: OkrData;
-}
-
 export interface OkrType {
+  id: number;
   name: string;
   okr: OkrData;
 }
