@@ -29,9 +29,9 @@ export async function ssrFetch<O, I = undefined>(
     return [null, error as Error];
   }
 
-  // if (response.status === 401) {
-  //   redirect("/sign-in");
-  // }
+  if (response.status === 401) {
+    redirect("/sign-in");
+  }
 
   response = await response.json();
 

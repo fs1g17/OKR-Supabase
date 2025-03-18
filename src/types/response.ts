@@ -3,7 +3,13 @@ export interface OkrListType {
   name: string;
 }
 
-export interface OkrListResponse {
+export interface NewOkrType {
+  id: number;
+  name: string;
+  okr: string;
+}
+
+export interface BackendResponse<T> {
   message: string;
-  data: OkrListType[];
+  data: T
 }

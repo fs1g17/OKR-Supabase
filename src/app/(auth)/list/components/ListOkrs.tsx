@@ -21,9 +21,11 @@ export default function ListOkrs({ list }: { list: OkrListType[] }) {
         <CardDescription>Here is a list of your OKRs</CardDescription>
       </CardHeader>
       <CardContent>
-        {list.map(({ id, name }) => (
-          <Link href={`/okr/${id}`}>{name}</Link>
-        ))}
+        <div className="flex flex-col gap-y-2.5">
+          {list.map(({ id, name }) => (
+            <Link href={`/okr/${id}`}>{name}</Link>
+          ))}
+        </div>
       </CardContent>
       <CardFooter className="flex justify-between">
         <NewOkrDialog>
