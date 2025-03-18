@@ -1,28 +1,22 @@
-"use client";
-
-import { list } from "@/api/client";
+import { ssrFetch } from "@/lib/server-side-fetching";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export default function List() {
-  const [data, setData] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
+export default async function List() {
+  const [response, error] = await ssrFetch<{
+    message: string;
+    data: { id: number; name: string }[];
+  }>("/api/okr/list", { method: "GET" });
 
-  useEffect(() => {
-    const getData = async () => {
-      const res = await list();
-      setData(res.data);
-    };
-    getData();
-  }, []);
+  if (error || !response || "error" in response) {
+    console.error(error);
+    throw new Error("Failed to fetch OKRs");
+  }
+
+  console.log(response);
 
   return (
     <div className="border rounded-md p-4">
-      {data.map(({ id, name }) => (
+      {response.data.map(({ id, name }) => (
         <Link href={`/okr/${id}`}>{name}</Link>
       ))}
     </div>

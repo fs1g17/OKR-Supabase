@@ -11,14 +11,10 @@ export async function signIn(prevState: any, formData: FormData) {
   const password = formData.get("password") as string;
 
   try {
-    console.log("here");
     const { value, expires, httpOnly, secure } = await performSignIn({
       username,
       password,
     });
-    console.log("here2");
-
-    console.log({ value, expires, httpOnly, secure });
 
     cookies().set("jwt", value, {
       expires: expires,
@@ -27,7 +23,6 @@ export async function signIn(prevState: any, formData: FormData) {
       sameSite: "lax",
     });
   } catch (error) {
-    //console.error(error);
     const e = error as AxiosError;
     return {
       success: false,
