@@ -9,6 +9,9 @@ import OkrChartSpread from "./OkrChartSpread";
 import useWindowSize from "@/hooks/useWindowSize";
 import { addChildToNodeById, updateNodeById } from "@/utils/graph";
 import SaveOkr from "./SaveOkr";
+import { ArrowBigLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function OkrChart({
   id,
@@ -159,6 +162,14 @@ export default function OkrChart({
       </div>
       <div className="absolute top-2 right-2">
         <SaveOkr {...{ id, data, setData }} />
+      </div>
+      <div className="absolute top-2 left-2">
+        <Link href="/list">
+          <Button>
+            <ArrowBigLeft />
+            Back
+          </Button>
+        </Link>
       </div>
     </div>
   );

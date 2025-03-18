@@ -33,14 +33,6 @@ export async function ssrFetch<O, I = undefined>(
     redirect("/sign-in");
   }
 
-  // if (response.status === 400) {
-  //   return [null, new Error("Error")];
-  // }
-
-  // if (response.status)
-
-  console.log(response);
-
   response = await response.json();
 
   return [response, null];

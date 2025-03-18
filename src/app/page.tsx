@@ -1,7 +1,5 @@
-import OkrChart from "@/components/OkrChart";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <OkrChart />
-  );
+  redirect("/list");
 }
