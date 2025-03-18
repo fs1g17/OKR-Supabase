@@ -25,5 +25,6 @@ export async function save(prevState: any, formData: FormData) {
   return {
     success: false,
     message: "Failed to update OKR",
+    response: null
   };
 }

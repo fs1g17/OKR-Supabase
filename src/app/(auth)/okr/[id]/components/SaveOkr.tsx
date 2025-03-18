@@ -8,9 +8,18 @@ import { save } from "../actions/save";
 const initialState = {
   success: false,
   message: "",
+  response: null,
 };
 
-export default function SaveOkr({ id, data }: { id: string; data: OkrData }) {
+export default function SaveOkr({
+  id,
+  data,
+  setData,
+}: {
+  id: string;
+  data: OkrData;
+  setData: (data: OkrData) => void;
+}) {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useFormState(save, initialState);
 
@@ -20,12 +29,15 @@ export default function SaveOkr({ id, data }: { id: string; data: OkrData }) {
     formAction(new FormData(formRef.current!));
   };
 
+  if (state.response) {
+    setData(state.response.data.okr);
+  }
+
   return (
     <form ref={formRef} onSubmit={handleSubmit}>
       <input name="id" value={id} className="hidden" />
       <input name="data" value={JSON.stringify(data)} className="hidden" />
       <Button type="submit">Save</Button>
-      <div>message: {state.message}</div>
     </form>
   );
 }

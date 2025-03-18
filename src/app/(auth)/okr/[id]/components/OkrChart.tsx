@@ -158,7 +158,7 @@ export default function OkrChart({
         <OkrChartSpread setSpread={setMultiplier} />
       </div>
       <div className="absolute top-2 right-2">
-        <SaveOkr id={id} data={data} />
+        <SaveOkr {...{ id, data, setData }} />
       </div>
     </div>
   );

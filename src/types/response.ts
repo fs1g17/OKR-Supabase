@@ -6,7 +6,7 @@ export interface OkrListType {
 export interface NewOkrType {
   id: number;
   name: string;
-  okr: string;
+  okr: OkrData;
 }
 
 export interface OkrType {
