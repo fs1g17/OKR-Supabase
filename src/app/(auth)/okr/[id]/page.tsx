@@ -1,4 +1,4 @@
-import OkrChart from "@/components/OkrChart";
+import OkrChart from "./components/OkrChart";
 import { ssrFetch } from "@/lib/server-side-fetching";
 import { BackendResponse, OkrListType, OkrType } from "@/types/response";
 

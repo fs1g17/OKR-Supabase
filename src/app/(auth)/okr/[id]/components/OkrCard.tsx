@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import UpdateCardDialog from "./UpdateCardDialog";
 import { PenIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";

@@ -8,6 +8,7 @@ import OkrChartSpread from "./OkrChartSpread";
 
 import useWindowSize from "@/hooks/useWindowSize";
 import { addChildToNodeById, updateNodeById } from "@/utils/graph";
+import SaveOkr from "./SaveOkr";
 
 export default function OkrChart({initialData}:{initialData: OkrData}) {
   console.log(initialData);
@@ -152,6 +153,9 @@ export default function OkrChart({initialData}:{initialData: OkrData}) {
       <svg ref={svgRef} className="absolute top-0 left-0" />
       <div className="absolute bottom-2 right-2">
         <OkrChartSpread setSpread={setMultiplier} />
+      </div>
+      <div className="absolute top-2 right-2">
+        <SaveOkr />
       </div>
     </div>
   );
