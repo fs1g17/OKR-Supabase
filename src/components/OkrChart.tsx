@@ -10,6 +10,7 @@ import useWindowSize from "@/hooks/useWindowSize";
 import { addChildToNodeById, updateNodeById } from "@/utils/graph";
 
 export default function OkrChart({initialData}:{initialData: OkrData}) {
+  console.log(initialData);
   const svgRef = useRef(null);
   const { width, height } = useWindowSize();
   const [data, setData] = useState<OkrData>(initialData);
@@ -147,7 +148,7 @@ export default function OkrChart({initialData}:{initialData: OkrData}) {
 }, [width, height, data, multiplier]);
 
   return (
-    <div className="relative h-[100vh] overflow-hidden">
+    <div className="relative h-[100vh] w-full overflow-hidden">
       <svg ref={svgRef} className="absolute top-0 left-0" />
       <div className="absolute bottom-2 right-2">
         <OkrChartSpread setSpread={setMultiplier} />
