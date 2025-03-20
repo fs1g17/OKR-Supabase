@@ -11,4 +11,6 @@ docker build --build-arg BACKEND_BASE_URL=http://127.0.0.1:8000 \
 
 docker run -p 3000:3000   -e NEXT_PUBLIC_BACKEND_BASE_URL=http://127.0.0.1:8000   -e BACKEND_BASE_URL=http://127.0.0.1:8000   gcr.io/okr-tracker-454311/front
 
-docker run -p 3000:3000   -e NEXT_PUBLIC_BACKEND_BASE_URL=http://localhost:8000   -e BACKEND_BASE_URL=http://localhost:8000   gcr.io/okr-tracker-454311/front
+### Docker
+- `docker build -t gcr.io/okr-tracker-454311/front .`
+- `docker push gcr.io/okr-tracker-454311/front `
