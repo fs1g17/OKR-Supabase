@@ -2,6 +2,8 @@ import { ssrFetch } from "@/lib/server-side-fetching";
 import { BackendResponse, OkrType } from "@/types/response";
 import ListOkrs from "./components/ListOkrs";
 
+export const dynamic = "force-dynamic";
+
 export default async function List() {
   const [response, error] = await ssrFetch<BackendResponse<Omit<OkrType,"okr">[]>>("/api/okr/list", {
     method: "GET",

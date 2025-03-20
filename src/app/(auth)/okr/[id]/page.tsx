@@ -2,6 +2,8 @@ import OkrChart from "./components/OkrChart";
 import { ssrFetch } from "@/lib/server-side-fetching";
 import { BackendResponse, OkrType } from "@/types/response";
 
+export const dynamic = "force-dynamic";
+
 export default async function OkrPage({
   params,
 }: {
