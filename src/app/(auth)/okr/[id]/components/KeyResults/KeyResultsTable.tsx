@@ -11,7 +11,7 @@ export default function KeyResultsTable({
   return (
     <div
       className={cn(
-        "flex flex-col",
+        "flex flex-col w-[400px]",
         keyResults.length > 0 && "border border-gray-200"
       )}
     >
