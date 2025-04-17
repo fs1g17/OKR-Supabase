@@ -25,7 +25,7 @@ export default function OkrChart({
         <OkrChartSpread setSpread={setMultiplier} />
       </div>
       <div className="absolute top-2 right-2">
-        <SaveOkr {...{ id, data, setData }} />
+        <SaveOkr id={parseInt(id)} value={data} />
       </div>
       <div className="absolute top-2 left-2">
         <Link href="/list">

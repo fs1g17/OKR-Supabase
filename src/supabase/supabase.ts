@@ -60,3 +60,17 @@ export async function getOkr(id: number): Promise<OkrData> {
 
   return (data[0] as OkrRow).value;
 }
+
+export async function saveOkr({
+  id,
+  value,
+}: {
+  id: number;
+  value: OkrData;
+}): Promise<void> {
+  const { error } = await supabase.from("okrs").update({ value }).eq("id", id);
+
+  if (error) {
+    throw new Error("Failed to save OKR");
+  }
+}
