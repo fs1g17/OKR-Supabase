@@ -1,5 +1,6 @@
 interface DataNode {
   id: number;
+  parentId: number;
   data: {
     objective: string;
     keyResults: string[]

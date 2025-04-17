@@ -10,15 +10,23 @@ export function getNodeById(root: DataNode, id: number): DataNode | null {
   );
 }
 
-export function updateNodeObjectiveById(id: number, root: DataNode, objective: string): void {
+export function updateNodeObjectiveById(
+  id: number,
+  root: DataNode,
+  objective: string
+): void {
   const node = getNodeById(root, id);
 
-  if(!node) return;
+  if (!node) return;
 
   node.data.objective = objective;
 }
 
-export function addKeyResultById(id: number, root: DataNode, keyResult: string): void {
+export function addKeyResultById(
+  id: number,
+  root: DataNode,
+  keyResult: string
+): void {
   const node = getNodeById(root, id);
 
   if (!node) return;
@@ -26,7 +34,12 @@ export function addKeyResultById(id: number, root: DataNode, keyResult: string):
   node.data.keyResults.push(keyResult);
 }
 
-export function updateKeyResultById(id: number, root: DataNode, keyResult: string, keyResultNumber: number): void {
+export function updateKeyResultById(
+  id: number,
+  root: DataNode,
+  keyResult: string,
+  keyResultNumber: number
+): void {
   const node = getNodeById(root, id);
 
   if (!node) return;
@@ -34,27 +47,50 @@ export function updateKeyResultById(id: number, root: DataNode, keyResult: strin
   node.data.keyResults[keyResultNumber] = keyResult;
 }
 
-export function updateNodeById(id: number, root: DataNode, data: Omit<DataNode, "children">): void {
+export function updateNodeById(
+  id: number,
+  root: DataNode,
+  data: Omit<DataNode, "children">
+): void {
   const node = getNodeById(root, id);
 
-  if(!node) return;
+  if (!node) return;
 
   node.data = data.data;
 }
 
-export function addChildToNodeById(id:number, okrData: OkrData, objective: string): void {
+export function addChildToNodeById(
+  id: number,
+  okrData: OkrData,
+  objective: string
+): void {
   const node = getNodeById(okrData.data, id);
 
   if (!node) return;
 
-  okrData.counter += 1;
   node.children.push({
     id: okrData.counter,
+    parentId: id,
     data: {
       objective,
-      keyResults: []
+      keyResults: [],
     },
-    children: []
+    children: [],
   });
   okrData.counter += 1;
+}
+
+export function removeNodeById(id: number, okrData: OkrData): void {
+  console.log("called remove Node");
+  const node = getNodeById(okrData.data, id);
+  if (!node) return;
+
+  console.log({ node });
+
+  const parent = getNodeById(okrData.data, node.parentId);
+  if (!parent) return;
+
+  console.log({ parent });
+
+  parent.children = parent.children.filter((child) => child.id !== id);
 }

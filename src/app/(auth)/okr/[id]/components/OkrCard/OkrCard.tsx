@@ -7,10 +7,11 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import UpdateCardDialog from "./UpdateCardDialog";
-import { PenIcon, PlusIcon } from "lucide-react";
+import { PenIcon, PlusIcon, TrashIcon } from "lucide-react";
 import AddKeyResultDialog from "./AddKeyResultDialog";
 import KeyResultsTable from "../KeyResults/KeyResultsTable";
 import { Label } from "@/components/ui/label";
+import RemoveObjectiveDialog from "./RemoveObjectiveDialog";
 
 export default function OkrCard({
   id,
@@ -20,6 +21,7 @@ export default function OkrCard({
   updateKeyResult,
   addKeyResult,
   addChildObjective,
+  removeObjective,
 }: {
   id: number;
   objective: string;
@@ -28,10 +30,19 @@ export default function OkrCard({
   updateKeyResult: (keyResult: string, keyResultNumber: number) => void;
   addKeyResult: (keyResult: string) => void;
   addChildObjective: (objective: string) => void;
+  removeObjective: () => void;
 }) {
   return (
     <Card id={`org-card-${id}`} className="min-w-[200px]">
-
+      <RemoveObjectiveDialog removeObjective={removeObjective}>
+        <Button
+          variant="ghost"
+          className="absolute top-1 right-1 rounded-full p-0 w-9 h-9 text-destructive hover:bg-white hover:text-destructive"
+          disabled={id === 0}
+        >
+          <TrashIcon />
+        </Button>
+      </RemoveObjectiveDialog>
       <CardHeader className="group">
         <CardTitle>
           Objective: {objective}
