@@ -10,7 +10,7 @@ const initialNodes: DataNode = {
 }
 
 const initialData: OkrData = {
-  counter: 0,
+  counter: 1,
   data: initialNodes
 }
 
