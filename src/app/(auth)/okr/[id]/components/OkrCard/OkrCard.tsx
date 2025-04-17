@@ -21,7 +21,7 @@ export default function OkrCard({
   addKeyResult,
   addChildObjective,
 }: {
-  id: string;
+  id: number;
   objective: string;
   keyResults: string[];
   updateObjective: (objective: string) => void;
@@ -30,7 +30,8 @@ export default function OkrCard({
   addChildObjective: (objective: string) => void;
 }) {
   return (
-    <Card id={id} className="min-w-[200px]">
+    <Card id={`org-card-${id}`} className="min-w-[200px]">
+
       <CardHeader className="group">
         <CardTitle>
           Objective: {objective}

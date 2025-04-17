@@ -128,7 +128,7 @@ export default function OkrChart({
         const { objective, keyResults } = d.data.data;
         const orgCard = (
           <OkrCard
-            id={`org-card-${d.data.id}`}
+            id={d.data.id}
             objective={objective}
             keyResults={keyResults}
             updateObjective={updateObjectiveFactory(d.data.id)}
