@@ -14,6 +14,19 @@ export async function signUp({
   });
 }
 
+export async function signIn({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  return await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+}
+
 export async function makeOkr({ name }: { name: string }): Promise<void> {
   const currentUserId = (await supabase.auth.getUser()).data.user?.id;
   if (!currentUserId) {

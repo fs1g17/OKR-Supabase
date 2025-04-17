@@ -16,7 +16,7 @@ export default function OkrPage({
   
   useEffect(() => {
     (async () => {setOkrData(await getOkr(parseInt(id)))})();
-  });
+  }, []);
 
   if (!okrData) return <div>Loading...</div>;
 
