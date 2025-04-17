@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import React, { useEffect, useRef, useState } from "react";
 import { hierarchy, linkVertical, select, tree, zoom } from "d3";
 
-import OkrCard from "./OkrCard";
+import OkrCard from "./OkrCard/OkrCard";
 import OkrChartSpread from "./OkrChartSpread";
 
 import useWindowSize from "@/hooks/useWindowSize";

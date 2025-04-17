@@ -9,22 +9,22 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { DialogClose, DialogTrigger } from "@radix-ui/react-dialog";
 
 export default function UpdateCardDialog({
-  open,
+  children,
   objective,
-  closeDialog,
   updateObjective,
 }: {
-  open: boolean;
+  children: React.ReactNode;
   objective: string;
-  closeDialog: () => void;
   updateObjective: (objective: string) => void;
 }) {
   const [newObjective, setNewObjective] = useState<string>(objective);
 
   return (
-    <Dialog open={open} onOpenChange={closeDialog}>
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Update Objective</DialogTitle>
@@ -40,14 +40,11 @@ export default function UpdateCardDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button
-            onClick={() => {
-              updateObjective(newObjective);
-              closeDialog();
-            }}
-          >
-            Update
-          </Button>
+          <DialogClose>
+            <Button onClick={() => updateObjective(newObjective)}>
+              Update
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
