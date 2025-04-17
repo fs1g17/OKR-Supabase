@@ -14,7 +14,7 @@ export async function signUp({
   });
 }
 
-export async function makeOkr({ name }: { name: string }) {
+export async function makeOkr({ name }: { name: string }): Promise<void> {
   const currentUserId = (await supabase.auth.getUser()).data.user?.id;
   if (!currentUserId) {
     throw new Error("can't create without a fucking user innit");
@@ -36,7 +36,9 @@ export async function makeOkr({ name }: { name: string }) {
   });
 }
 
-export async function getOkrsInfo() {
+export async function getOkrsInfo(): Promise<
+  Omit<OkrRow, "createdBy" | "value">[]
+> {
   const { data, error } = await supabase
     .from("okrs")
     .select("id,name")
@@ -47,4 +49,14 @@ export async function getOkrsInfo() {
   }
 
   return data as Omit<OkrRow, "createdBy" | "value">[];
+}
+
+export async function getOkr(id: number): Promise<OkrData> {
+  const { data, error } = await supabase.from("okrs").select("*").eq("id", id);
+
+  if (error) {
+    throw new Error("Failed to fetch OKR");
+  }
+
+  return (data[0] as OkrRow).value;
 }
