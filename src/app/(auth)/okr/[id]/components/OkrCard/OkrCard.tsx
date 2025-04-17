@@ -31,16 +31,21 @@ export default function OkrCard({
 }) {
   return (
     <Card id={id} className="min-w-[200px]">
-      <UpdateCardDialog objective={objective} updateObjective={updateObjective}>
-        <Button
-          variant="ghost"
-          className="absolute top-1 right-1 rounded-full p-0 w-9 h-9"
-        >
-          <PenIcon />
-        </Button>
-      </UpdateCardDialog>
-      <CardHeader>
-        <CardTitle>Objective: {objective}</CardTitle>
+      <CardHeader className="group">
+        <CardTitle>
+          Objective: {objective}
+          <UpdateCardDialog
+            objective={objective}
+            updateObjective={updateObjective}
+          >
+            <Button
+              variant="ghost"
+              className="invisible group-hover:visible rounded-full p-0 w-9 h-9"
+            >
+              <PenIcon />
+            </Button>
+          </UpdateCardDialog>
+        </CardTitle>
       </CardHeader>
 
       <CardContent>
