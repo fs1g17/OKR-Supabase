@@ -25,6 +25,7 @@ export default function OkrChart({
   const { width, height } = useWindowSize();
   const [data, setData] = useState<OkrData>(initialData);
   const [multiplier, setMultiplier] = useState<number>(1);
+  const transformRef = useRef<{x:number, y:number, k:number}|null>(null)
 
   console.log(data);
 
@@ -98,11 +99,15 @@ export default function OkrChart({
     svg.attr("width", width * multiplier).attr("height", height * multiplier);
 
     const g = svg.append("g");
+    if(transformRef.current !== null) {
+      g.attr("transform", `translate(${transformRef.current.x},${transformRef.current.y})scale(${transformRef.current.k})`);
+    }
 
     const zoomBehavior = zoom()
       .scaleExtent([0.5, 2])
       .on("zoom", (event) => {
         g.attr("transform", event.transform);
+        transformRef.current = event.transform;
       });
 
     svg.call(zoomBehavior as any);

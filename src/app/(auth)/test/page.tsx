@@ -2,6 +2,7 @@ import OkrChart from "../okr/[id]/components/OkrChart";
 
 const initialNodes: DataNode = {
   id: 0,
+  parentId: 0,
   data: {
     objective: "Test",
     keyResults: []
