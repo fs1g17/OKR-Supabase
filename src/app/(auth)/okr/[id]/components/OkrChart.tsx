@@ -7,7 +7,7 @@ import OkrCard from "./OkrCard";
 import OkrChartSpread from "./OkrChartSpread";
 
 import useWindowSize from "@/hooks/useWindowSize";
-import { addChildToNodeById, updateNodeById } from "@/utils/graph";
+import { addChildToNodeById, addKeyResultById, updateKeyResultById, updateNodeById, updateNodeObjectiveById } from "@/utils/graph";
 import SaveOkr from "./SaveOkr";
 import { ArrowBigLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,39 +26,31 @@ export default function OkrChart({
   const [data, setData] = useState<OkrData>(initialData);
   const [multiplier, setMultiplier] = useState<number>(1);
 
-  const updateCardFactory = (id: number) => {
-    return ({
-      description,
-      objective,
-    }: {
-      description: string;
-      objective: string;
-    }) => {
+  const updateObjectiveFactory = (id: number) => {
+    return (objective: string) => {
       setData((prev) => {
         const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        updateNodeById(id, deepCopy.data, {
-          id,
-          data: { description, objective },
-        });
+        updateNodeObjectiveById(id, deepCopy.data, objective);
         return deepCopy;
       });
     };
   };
 
-  const addKeyResultFactory = (id: number) => {
-    return ({
-      description,
-      objective,
-    }: {
-      description: string;
-      objective: string;
-    }) => {
+  const updateKeyResultFactory = (id: number) => {
+    return (keyResult: string, keyResultNumber: number) => {
       setData((prev) => {
         const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        addChildToNodeById(id, deepCopy, {
-          id,
-          data: { description, objective },
-        });
+        updateKeyResultById(id, deepCopy.data, keyResult, keyResultNumber);
+        return deepCopy;
+      })
+    }
+  }
+
+  const addKeyResultFactory = (id: number) => {
+    return (keyResult: string) => {
+      setData((prev) => {
+        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
+        addKeyResultById(id, deepCopy.data, keyResult)
         return deepCopy;
       });
     };
@@ -121,13 +113,14 @@ export default function OkrChart({
     root.descendants().forEach((d) => {
       const nodeElement = document.getElementById(`node-${d.data.id}`);
       if (nodeElement) {
-        const { objective, description } = d.data.data;
+        const { objective, keyResults } = d.data.data;
         const orgCard = (
           <OkrCard
             id={`org-card-${d.data.id}`}
-            description={description}
             objective={objective}
-            updateCard={updateCardFactory(d.data.id)}
+            keyResults={keyResults}
+            updateObjective={updateObjectiveFactory(d.data.id)}
+            updateKeyResult={updateKeyResultFactory(d.data.id)}
             addKeyResult={addKeyResultFactory(d.data.id)}
           />
         );

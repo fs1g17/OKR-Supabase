@@ -11,31 +11,23 @@ import UpdateCardDialog from "./UpdateCardDialog";
 import { PenIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import AddKeyResultDialog from "./AddKeyResultDialog";
+import { cn } from "@/lib/utils";
+import KeyResultsTable from "./KeyResults/KeyResultsTable";
 
 export default function OkrCard({
   id,
-  description,
   objective,
-  updateCard,
+  keyResults,
+  updateObjective,
+  updateKeyResult,
   addKeyResult,
 }: {
   id: string;
-  description: string;
   objective: string;
-  updateCard: ({
-    description,
-    objective,
-  }: {
-    description: string;
-    objective: string;
-  }) => void;
-  addKeyResult: ({
-    description,
-    objective,
-  }: {
-    description: string;
-    objective: string;
-  }) => void;
+  keyResults: string[];
+  updateObjective: (objective: string) => void;
+  updateKeyResult: (keyResult: string, keyResultNumber: number) => void;
+  addKeyResult: (keyResult: string) => void;
 }) {
   const [updateCardDialogOpen, setUpdateCardDialogOpen] =
     useState<boolean>(false);
@@ -54,8 +46,11 @@ export default function OkrCard({
         </Button>
         <CardHeader>
           <CardTitle>Objective: {objective}</CardTitle>
-          <CardDescription>{description}</CardDescription>
         </CardHeader>
+
+        <CardContent>
+          <KeyResultsTable keyResults={keyResults} />
+        </CardContent>
 
         <CardFooter>
           <Button onClick={() => setAddKeyResultDialogOpen(true)}>
@@ -70,9 +65,8 @@ export default function OkrCard({
           open={updateCardDialogOpen}
           closeDialog={() => setUpdateCardDialogOpen(false)}
           {...{
-            updateCard,
             objective,
-            description,
+            updateObjective,
           }}
         />
       )}

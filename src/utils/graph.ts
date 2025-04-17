@@ -10,6 +10,30 @@ export function getNodeById(root: DataNode, id: number): DataNode | null {
   );
 }
 
+export function updateNodeObjectiveById(id: number, root: DataNode, objective: string): void {
+  const node = getNodeById(root, id);
+
+  if(!node) return;
+
+  node.data.objective = objective;
+}
+
+export function addKeyResultById(id: number, root: DataNode, keyResult: string): void {
+  const node = getNodeById(root, id);
+
+  if (!node) return;
+
+  node.data.keyResults.push(keyResult);
+}
+
+export function updateKeyResultById(id: number, root: DataNode, keyResult: string, keyResultNumber: number): void {
+  const node = getNodeById(root, id);
+
+  if (!node) return;
+
+  node.data.keyResults[keyResultNumber] = keyResult;
+}
+
 export function updateNodeById(id: number, root: DataNode, data: Omit<DataNode, "children">): void {
   const node = getNodeById(root, id);
 

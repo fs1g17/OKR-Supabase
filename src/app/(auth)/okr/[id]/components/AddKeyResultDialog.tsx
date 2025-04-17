@@ -17,16 +17,9 @@ export default function AddKeyResultDialog({
 }: {
   open: boolean;
   closeDialog: () => void;
-  addKeyResult: ({
-    description,
-    objective,
-  }: {
-    description: string;
-    objective: string;
-  }) => void;
+  addKeyResult: (keyResult: string) => void;
 }) {
   const [keyResult, setKeyResult] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
 
   return (
     <Dialog open={open} onOpenChange={closeDialog}>
@@ -43,22 +36,11 @@ export default function AddKeyResultDialog({
               onChange={(e) => setKeyResult(e.currentTarget.value)}
             />
           </div>
-          <div className="grid flex-1 gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.currentTarget.value)}
-            />
-          </div>
         </div>
         <DialogFooter>
           <Button
             onClick={() => {
-              addKeyResult({
-                objective: keyResult,
-                description,
-              });
+              addKeyResult(keyResult);
               closeDialog();
             }}
           >

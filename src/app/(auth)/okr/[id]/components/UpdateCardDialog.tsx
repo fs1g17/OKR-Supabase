@@ -13,24 +13,15 @@ import { Button } from "@/components/ui/button";
 export default function UpdateCardDialog({
   open,
   objective,
-  description,
   closeDialog,
-  updateCard,
+  updateObjective,
 }: {
   open: boolean;
   objective: string;
-  description: string;
   closeDialog: () => void;
-  updateCard: ({
-    description,
-    objective,
-  }: {
-    description: string;
-    objective: string;
-  }) => void;
+  updateObjective: (objective: string) => void;
 }) {
   const [newObjective, setNewObjective] = useState<string>(objective);
-  const [newDescription, setNewDescription] = useState<string>(description);
 
   return (
     <Dialog open={open} onOpenChange={closeDialog}>
@@ -47,22 +38,11 @@ export default function UpdateCardDialog({
               onChange={(e) => setNewObjective(e.currentTarget.value)}
             />
           </div>
-          <div className="grid flex-1 gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.currentTarget.value)}
-            />
-          </div>
         </div>
         <DialogFooter>
           <Button
             onClick={() => {
-              updateCard({
-                description: newDescription,
-                objective: newObjective,
-              });
+              updateObjective(newObjective);
               closeDialog();
             }}
           >

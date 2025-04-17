@@ -2,7 +2,7 @@ interface DataNode {
   id: number;
   data: {
     objective: string;
-    description: string;
+    keyResults: string[]
   };
   children: DataNode[];
 }
