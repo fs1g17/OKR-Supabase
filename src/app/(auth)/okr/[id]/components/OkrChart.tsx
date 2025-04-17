@@ -7,7 +7,7 @@ import OkrCard from "./OkrCard/OkrCard";
 import OkrChartSpread from "./OkrChartSpread";
 
 import useWindowSize from "@/hooks/useWindowSize";
-import { addChildToNodeById, addKeyResultById, removeNodeById, updateKeyResultById, updateNodeById, updateNodeObjectiveById } from "@/utils/graph";
+import { addChildToNodeById, addKeyResultById, removeKeyResultById, removeNodeById, updateKeyResultById, updateNodeById, updateNodeObjectiveById } from "@/utils/graph";
 import SaveOkr from "./SaveOkr";
 import { ArrowBigLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -78,6 +78,16 @@ export default function OkrChart({
     };
   };
 
+  const removeKeyResultFactory = (id: number) => {
+    return (keyResultNumber: number) => {
+      setData((prev) => {
+        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
+        removeKeyResultById(id, deepCopy, keyResultNumber)
+        return deepCopy;
+      })
+    }
+  }
+
   useEffect(() => {
     if (!svgRef) return;
     if (!width || !height) return;
@@ -146,6 +156,7 @@ export default function OkrChart({
             addKeyResult={addKeyResultFactory(d.data.id)}
             addChildObjective={addChildObjectiveFactory(d.data.id)}
             removeObjective={removeObjectiveFactory(d.data.id)}
+            removeKeyResult={removeKeyResultFactory(d.data.id)}
           />
         );
         createRoot(nodeElement).render(orgCard);

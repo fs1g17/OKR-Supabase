@@ -22,6 +22,7 @@ export default function OkrCard({
   addKeyResult,
   addChildObjective,
   removeObjective,
+  removeKeyResult,
 }: {
   id: number;
   objective: string;
@@ -31,6 +32,7 @@ export default function OkrCard({
   addKeyResult: (keyResult: string) => void;
   addChildObjective: (objective: string) => void;
   removeObjective: () => void;
+  removeKeyResult: (keyResultNumber: number) => void;
 }) {
   return (
     <Card id={`org-card-${id}`} className="min-w-[200px]">
@@ -66,6 +68,7 @@ export default function OkrCard({
           keyResults={keyResults}
           updateKeyResult={updateKeyResult}
           addChildObjective={addChildObjective}
+          removeKeyResult={removeKeyResult}
         />
       </CardContent>
 

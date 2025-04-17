@@ -81,16 +81,24 @@ export function addChildToNodeById(
 }
 
 export function removeNodeById(id: number, okrData: OkrData): void {
-  console.log("called remove Node");
   const node = getNodeById(okrData.data, id);
   if (!node) return;
-
-  console.log({ node });
 
   const parent = getNodeById(okrData.data, node.parentId);
   if (!parent) return;
 
-  console.log({ parent });
-
   parent.children = parent.children.filter((child) => child.id !== id);
+}
+
+export function removeKeyResultById(
+  id: number,
+  okrData: OkrData,
+  keyResultNumber: number
+): void {
+  const node = getNodeById(okrData.data, id);
+  if (!node) return;
+
+  node.data.keyResults = node.data.keyResults.filter(
+    (_, currentKeyResultNumber) => currentKeyResultNumber !== keyResultNumber
+  );
 }

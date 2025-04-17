@@ -5,10 +5,12 @@ export default function KeyResultsTable({
   keyResults,
   updateKeyResult,
   addChildObjective,
+  removeKeyResult,
 }: {
   keyResults: string[];
   updateKeyResult: (keyResult: string, keyResultNumber: number) => void;
   addChildObjective: (objective: string) => void;
+  removeKeyResult: (keyResultNumber: number) => void;
 }) {
   return (
     <div
@@ -24,6 +26,7 @@ export default function KeyResultsTable({
           keyResultNumber={i}
           updateKeyResult={updateKeyResult}
           addChildObjective={addChildObjective}
+          removeKeyResult={() => removeKeyResult(i)}
         />
       ))}
     </div>
