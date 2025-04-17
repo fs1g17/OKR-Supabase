@@ -1,3 +1,4 @@
+import { OkrRow } from "@/types/supabase";
 import { supabase } from "./init";
 
 export async function signUp({
@@ -33,4 +34,17 @@ export async function makeOkr({ name }: { name: string }) {
       },
     },
   });
+}
+
+export async function getOkrsInfo() {
+  const { data, error } = await supabase
+    .from("okrs")
+    .select("id,name")
+    .eq("createdBy", (await supabase.auth.getUser()).data.user?.id);
+
+  if (error) {
+    throw new Error("Failed to fetch OKRs");
+  }
+
+  return data as Omit<OkrRow, "createdBy" | "value">[];
 }
