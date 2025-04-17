@@ -7,7 +7,15 @@ import OkrCard from "./OkrCard/OkrCard";
 import OkrChartSpread from "./OkrChartSpread";
 
 import useWindowSize from "@/hooks/useWindowSize";
-import { addChildToNodeById, addKeyResultById, removeKeyResultById, removeNodeById, updateKeyResultById, updateNodeById, updateNodeObjectiveById } from "@/utils/graph";
+import {
+  addChildToNodeById,
+  addKeyResultById,
+  removeKeyResultById,
+  removeNodeById,
+  updateKeyResultById,
+  updateNodeById,
+  updateNodeObjectiveById,
+} from "@/utils/graph";
 import SaveOkr from "./SaveOkr";
 import { ArrowBigLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,7 +33,8 @@ export default function OkrChart({
   const { width, height } = useWindowSize();
   const [data, setData] = useState<OkrData>(initialData);
   const [multiplier, setMultiplier] = useState<number>(1);
-  const transformRef = useRef<{x:number, y:number, k:number}|null>(null)
+  const transformRef = useRef<{ x: number; y: number; k: number } | null>(null);
+  const counterRef = useRef<number>(0);
 
   console.log(data);
 
@@ -45,15 +54,15 @@ export default function OkrChart({
         const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
         updateKeyResultById(id, deepCopy.data, keyResult, keyResultNumber);
         return deepCopy;
-      })
-    }
-  }
+      });
+    };
+  };
 
   const addKeyResultFactory = (id: number) => {
     return (keyResult: string) => {
       setData((prev) => {
         const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        addKeyResultById(id, deepCopy.data, keyResult)
+        addKeyResultById(id, deepCopy.data, keyResult);
         return deepCopy;
       });
     };
@@ -83,11 +92,11 @@ export default function OkrChart({
     return (keyResultNumber: number) => {
       setData((prev) => {
         const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        removeKeyResultById(id, deepCopy, keyResultNumber)
+        removeKeyResultById(id, deepCopy, keyResultNumber);
         return deepCopy;
-      })
-    }
-  }
+      });
+    };
+  };
 
   useEffect(() => {
     if (!svgRef) return;
@@ -99,9 +108,6 @@ export default function OkrChart({
     svg.attr("width", width * multiplier).attr("height", height * multiplier);
 
     const g = svg.append("g");
-    if(transformRef.current !== null) {
-      g.attr("transform", `translate(${transformRef.current.x},${transformRef.current.y})scale(${transformRef.current.k})`);
-    }
 
     const zoomBehavior = zoom()
       .scaleExtent([0.5, 2])
@@ -176,6 +182,31 @@ export default function OkrChart({
               .attr("height", cardSize.height)
               .attr("x", (d) => ((d as any).x as number) - cardSize.width / 2)
               .attr("y", (d) => (d as any).y as number);
+
+            counterRef.current += 1;
+
+            /**
+             * I was experiencing issues with the cards jumping when data was mutated
+             * The fix for that turned out to be simply to store the transformation https://codepen.io/likr/pen/vYmBEPE
+             * I needed to store it in a ref so that its outside of the react render cycle
+             * 
+             * I then ran into a scaling issue - the cards would be cropped if data was mutated at different zoom levels
+             * so the trick is to apply the zoom after all the cards are already rendered
+             * 
+             * N.B: the "cropping" happened because the 'foreignObject' width and height calculation just above
+             * was messing with the zoom
+             */
+
+            if (counterRef.current === root.descendants().length) {
+              console.log("transforming!");
+              if (transformRef.current !== null) {
+                g.attr(
+                  "transform",
+                  `translate(${transformRef.current.x},${transformRef.current.y})scale(${transformRef.current.k})`
+                );
+              }
+              counterRef.current = 0;
+            }
           }
         });
         observer.observe(nodeElement, { childList: true, subtree: true });
