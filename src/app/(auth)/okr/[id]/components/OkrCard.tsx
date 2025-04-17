@@ -13,6 +13,7 @@ import { useState } from "react";
 import AddKeyResultDialog from "./AddKeyResultDialog";
 import { cn } from "@/lib/utils";
 import KeyResultsTable from "./KeyResults/KeyResultsTable";
+import { Label } from "@/components/ui/label";
 
 export default function OkrCard({
   id,
@@ -21,6 +22,7 @@ export default function OkrCard({
   updateObjective,
   updateKeyResult,
   addKeyResult,
+  addChildObjective,
 }: {
   id: string;
   objective: string;
@@ -28,6 +30,7 @@ export default function OkrCard({
   updateObjective: (objective: string) => void;
   updateKeyResult: (keyResult: string, keyResultNumber: number) => void;
   addKeyResult: (keyResult: string) => void;
+  addChildObjective: (objective: string) => void;
 }) {
   const [updateCardDialogOpen, setUpdateCardDialogOpen] =
     useState<boolean>(false);
@@ -49,9 +52,11 @@ export default function OkrCard({
         </CardHeader>
 
         <CardContent>
+          <Label>Key results</Label>
           <KeyResultsTable
             keyResults={keyResults}
             updateKeyResult={updateKeyResult}
+            addChildObjective={addChildObjective}
           />
         </CardContent>
 

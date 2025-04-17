@@ -26,6 +26,8 @@ export default function OkrChart({
   const [data, setData] = useState<OkrData>(initialData);
   const [multiplier, setMultiplier] = useState<number>(1);
 
+  console.log(data);
+
   const updateObjectiveFactory = (id: number) => {
     return (objective: string) => {
       setData((prev) => {
@@ -51,6 +53,16 @@ export default function OkrChart({
       setData((prev) => {
         const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
         addKeyResultById(id, deepCopy.data, keyResult)
+        return deepCopy;
+      });
+    };
+  };
+
+  const addChildObjectiveFactory = (id: number) => {
+    return (objective: string) => {
+      setData((prev) => {
+        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
+        addChildToNodeById(id, deepCopy, objective);
         return deepCopy;
       });
     };
@@ -122,6 +134,7 @@ export default function OkrChart({
             updateObjective={updateObjectiveFactory(d.data.id)}
             updateKeyResult={updateKeyResultFactory(d.data.id)}
             addKeyResult={addKeyResultFactory(d.data.id)}
+            addChildObjective={addChildObjectiveFactory(d.data.id)}
           />
         );
         createRoot(nodeElement).render(orgCard);

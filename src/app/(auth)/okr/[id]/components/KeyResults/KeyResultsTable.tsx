@@ -3,10 +3,12 @@ import KeyResultRow from "./KeyResultRow";
 
 export default function KeyResultsTable({
   keyResults,
-  updateKeyResult
+  updateKeyResult,
+  addChildObjective,
 }: {
   keyResults: string[];
   updateKeyResult: (keyResult: string, keyResultNumber: number) => void;
+  addChildObjective: (objective: string) => void;
 }) {
   return (
     <div
@@ -21,6 +23,7 @@ export default function KeyResultsTable({
           keyResult={keyResult}
           keyResultNumber={i}
           updateKeyResult={updateKeyResult}
+          addChildObjective={addChildObjective}
         />
       ))}
     </div>

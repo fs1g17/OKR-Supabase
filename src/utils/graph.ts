@@ -42,14 +42,18 @@ export function updateNodeById(id: number, root: DataNode, data: Omit<DataNode, 
   node.data = data.data;
 }
 
-export function addChildToNodeById(id: number, okrData: OkrData, data: Omit<DataNode, "children">): void {
+export function addChildToNodeById(id:number, okrData: OkrData, objective: string): void {
   const node = getNodeById(okrData.data, id);
 
-  if(!node) return; 
+  if (!node) return;
 
+  okrData.counter += 1;
   node.children.push({
     id: okrData.counter,
-    data: data.data,
+    data: {
+      objective,
+      keyResults: []
+    },
     children: []
   });
   okrData.counter += 1;
