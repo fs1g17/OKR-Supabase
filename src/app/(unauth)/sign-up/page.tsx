@@ -14,9 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useRef } from "react";
-import { useFormState } from "react-dom";
-import { signUp } from "@/app/actions/sign-up";
+import { useRef, useState } from "react";
+import { signUp } from "@/supabase/supabase";
+import { useRouter } from "next/navigation";
 
 const initialState = {
   success: false,
@@ -24,14 +24,22 @@ const initialState = {
 };
 
 export default function SignUp() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(signUp, initialState);
-
-  console.log(state);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const router = useRouter();
 
   const handleSubmit = async (evt: React.FormEvent) => {
     evt.preventDefault();
-    formAction(new FormData(formRef.current!));
+
+    if (password !== confirmPassword) {
+      console.log("wrong password");
+      return;
+    }
+
+    const resposne = await signUp({ email, password });
+    console.log({ user: resposne.data });
+    router.push("/list");
   };
 
   return (
@@ -40,34 +48,48 @@ export default function SignUp() {
         <CardTitle>Welcome!</CardTitle>
         <CardDescription>Sign up to start making OKRs.</CardDescription>
       </CardHeader>
-      <form ref={formRef} onSubmit={handleSubmit}>
-        <CardContent>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="username">Username</Label>
-              <Input id="username" name="username" placeholder="Username" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" placeholder="Password" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="confirm_password">Confirm Password</Label>
-              <Input
-                id="confirm_password"
-                name="confirm_password"
-                placeholder="Confirm Password"
-              />
-            </div>
+      <CardContent>
+        <div className="grid w-full items-center gap-4">
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              name="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
           </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Link href="/sign-in">
-            <Button variant="outline">Sign In</Button>
-          </Link>
-          <Button type="submit">Sign Up</Button>
-        </CardFooter>
-      </form>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              name="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
+          </div>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="confirm_password">Confirm Password</Label>
+            <Input
+              id="confirm_password"
+              name="confirm_password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.currentTarget.value)}
+            />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Link href="/sign-in">
+          <Button variant="outline">Sign In</Button>
+        </Link>
+        <Button type="submit" onClick={handleSubmit}>
+          Sign Up
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
