@@ -49,7 +49,10 @@ export default function OkrCard({
         </CardHeader>
 
         <CardContent>
-          <KeyResultsTable keyResults={keyResults} />
+          <KeyResultsTable
+            keyResults={keyResults}
+            updateKeyResult={updateKeyResult}
+          />
         </CardContent>
 
         <CardFooter>

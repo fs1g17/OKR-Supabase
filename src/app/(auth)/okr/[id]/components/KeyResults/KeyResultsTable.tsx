@@ -3,8 +3,10 @@ import KeyResultRow from "./KeyResultRow";
 
 export default function KeyResultsTable({
   keyResults,
+  updateKeyResult
 }: {
   keyResults: string[];
+  updateKeyResult: (keyResult: string, keyResultNumber: number) => void;
 }) {
   return (
     <div
@@ -17,6 +19,8 @@ export default function KeyResultsTable({
         <KeyResultRow
           className={cn("w-full px-2", i % 2 === 1 && "bg-gray-200")}
           keyResult={keyResult}
+          keyResultNumber={i}
+          updateKeyResult={updateKeyResult}
         />
       ))}
     </div>
