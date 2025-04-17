@@ -20,6 +20,7 @@ import SaveOkr from "./SaveOkr";
 import { ArrowBigLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import useOkrData from "@/hooks/useOkrData";
 
 export default function OkrChart({
   id,
@@ -30,73 +31,23 @@ export default function OkrChart({
 }) {
   console.log(initialData);
   const svgRef = useRef(null);
-  const { width, height } = useWindowSize();
-  const [data, setData] = useState<OkrData>(initialData);
-  const [multiplier, setMultiplier] = useState<number>(1);
-  const transformRef = useRef<{ x: number; y: number; k: number } | null>(null);
   const counterRef = useRef<number>(0);
+  const transformRef = useRef<{ x: number; y: number; k: number } | null>(null);
+
+  const { width, height } = useWindowSize();
+  const [multiplier, setMultiplier] = useState<number>(1);
+  const {
+    data,
+    setData,
+    updateKeyResultFactory,
+    updateObjectiveFactory,
+    addChildObjectiveFactory,
+    addKeyResultFactory,
+    removeKeyResultFactory,
+    removeObjectiveFactory,
+  } = useOkrData(initialData);
 
   console.log(data);
-
-  const updateObjectiveFactory = (id: number) => {
-    return (objective: string) => {
-      setData((prev) => {
-        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        updateNodeObjectiveById(id, deepCopy.data, objective);
-        return deepCopy;
-      });
-    };
-  };
-
-  const updateKeyResultFactory = (id: number) => {
-    return (keyResult: string, keyResultNumber: number) => {
-      setData((prev) => {
-        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        updateKeyResultById(id, deepCopy.data, keyResult, keyResultNumber);
-        return deepCopy;
-      });
-    };
-  };
-
-  const addKeyResultFactory = (id: number) => {
-    return (keyResult: string) => {
-      setData((prev) => {
-        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        addKeyResultById(id, deepCopy.data, keyResult);
-        return deepCopy;
-      });
-    };
-  };
-
-  const addChildObjectiveFactory = (id: number) => {
-    return (objective: string) => {
-      setData((prev) => {
-        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        addChildToNodeById(id, deepCopy, objective);
-        return deepCopy;
-      });
-    };
-  };
-
-  const removeObjectiveFactory = (id: number) => {
-    return () => {
-      setData((prev) => {
-        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        removeNodeById(id, deepCopy);
-        return deepCopy;
-      });
-    };
-  };
-
-  const removeKeyResultFactory = (id: number) => {
-    return (keyResultNumber: number) => {
-      setData((prev) => {
-        const deepCopy = JSON.parse(JSON.stringify(prev)) as OkrData;
-        removeKeyResultById(id, deepCopy, keyResultNumber);
-        return deepCopy;
-      });
-    };
-  };
 
   useEffect(() => {
     if (!svgRef) return;
@@ -189,10 +140,10 @@ export default function OkrChart({
              * I was experiencing issues with the cards jumping when data was mutated
              * The fix for that turned out to be simply to store the transformation https://codepen.io/likr/pen/vYmBEPE
              * I needed to store it in a ref so that its outside of the react render cycle
-             * 
+             *
              * I then ran into a scaling issue - the cards would be cropped if data was mutated at different zoom levels
              * so the trick is to apply the zoom after all the cards are already rendered
-             * 
+             *
              * N.B: the "cropping" happened because the 'foreignObject' width and height calculation just above
              * was messing with the zoom
              */
