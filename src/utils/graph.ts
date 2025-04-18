@@ -10,23 +10,95 @@ export function getNodeById(root: DataNode, id: number): DataNode | null {
   );
 }
 
-export function updateNodeById(id: number, root: DataNode, data: Omit<DataNode, "children">): void {
+export function updateNodeObjectiveById(
+  id: number,
+  root: DataNode,
+  objective: string
+): void {
   const node = getNodeById(root, id);
 
-  if(!node) return;
+  if (!node) return;
+
+  node.data.objective = objective;
+}
+
+export function addKeyResultById(
+  id: number,
+  root: DataNode,
+  keyResult: string
+): void {
+  const node = getNodeById(root, id);
+
+  if (!node) return;
+
+  node.data.keyResults.push(keyResult);
+}
+
+export function updateKeyResultById(
+  id: number,
+  root: DataNode,
+  keyResult: string,
+  keyResultNumber: number
+): void {
+  const node = getNodeById(root, id);
+
+  if (!node) return;
+
+  node.data.keyResults[keyResultNumber] = keyResult;
+}
+
+export function updateNodeById(
+  id: number,
+  root: DataNode,
+  data: Omit<DataNode, "children">
+): void {
+  const node = getNodeById(root, id);
+
+  if (!node) return;
 
   node.data = data.data;
 }
 
-export function addChildToNodeById(id: number, okrData: OkrData, data: Omit<DataNode, "children">): void {
+export function addChildToNodeById(
+  id: number,
+  okrData: OkrData,
+  objective: string
+): void {
   const node = getNodeById(okrData.data, id);
 
-  if(!node) return; 
+  if (!node) return;
 
   node.children.push({
     id: okrData.counter,
-    data: data.data,
-    children: []
+    parentId: id,
+    data: {
+      objective,
+      keyResults: [],
+    },
+    children: [],
   });
   okrData.counter += 1;
+}
+
+export function removeNodeById(id: number, okrData: OkrData): void {
+  const node = getNodeById(okrData.data, id);
+  if (!node) return;
+
+  const parent = getNodeById(okrData.data, node.parentId);
+  if (!parent) return;
+
+  parent.children = parent.children.filter((child) => child.id !== id);
+}
+
+export function removeKeyResultById(
+  id: number,
+  okrData: OkrData,
+  keyResultNumber: number
+): void {
+  const node = getNodeById(okrData.data, id);
+  if (!node) return;
+
+  node.data.keyResults = node.data.keyResults.filter(
+    (_, currentKeyResultNumber) => currentKeyResultNumber !== keyResultNumber
+  );
 }

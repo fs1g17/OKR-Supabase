@@ -1,8 +1,9 @@
 interface DataNode {
   id: number;
+  parentId: number;
   data: {
     objective: string;
-    description: string;
+    keyResults: string[]
   };
   children: DataNode[];
 }

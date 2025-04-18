@@ -4,32 +4,26 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function AddKeyResultDialog({
-  open,
-  closeDialog,
+  children,
   addKeyResult,
 }: {
-  open: boolean;
-  closeDialog: () => void;
-  addKeyResult: ({
-    description,
-    objective,
-  }: {
-    description: string;
-    objective: string;
-  }) => void;
+  children: React.ReactNode;
+  addKeyResult: (keyResult: string) => void;
 }) {
   const [keyResult, setKeyResult] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
 
   return (
-    <Dialog open={open} onOpenChange={closeDialog}>
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Key Result</DialogTitle>
@@ -43,27 +37,13 @@ export default function AddKeyResultDialog({
               onChange={(e) => setKeyResult(e.currentTarget.value)}
             />
           </div>
-          <div className="grid flex-1 gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.currentTarget.value)}
-            />
-          </div>
         </div>
         <DialogFooter>
-          <Button
-            onClick={() => {
-              addKeyResult({
-                objective: keyResult,
-                description,
-              });
-              closeDialog();
-            }}
-          >
-            Add Key Result
-          </Button>
+          <DialogClose>
+            <Button onClick={() => addKeyResult(keyResult)}>
+              Add Key Result
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

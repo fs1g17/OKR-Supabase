@@ -1,23 +1,24 @@
+"use client";
+
 import OkrChart from "./components/OkrChart";
 import { ssrFetch } from "@/lib/server-side-fetching";
+import { getOkr } from "@/supabase/supabase";
 import { BackendResponse, OkrType } from "@/types/response";
+import { useEffect, useState } from "react";
 
-export default async function OkrPage({
+export default function OkrPage({
   params,
 }: {
   params: { [key: string]: string };
 }) {
   const id = params["id"];
+  const [okrData, setOkrData] = useState<OkrData>()
+  
+  useEffect(() => {
+    (async () => {setOkrData(await getOkr(parseInt(id)))})();
+  }, []);
 
-  const [response, error] = await ssrFetch<BackendResponse<Omit<OkrType,"id">>>(
-    `/api/okr/${id}`,
-    { method: "GET" }
-  );
+  if (!okrData) return <div>Loading...</div>;
 
-  if (error || !response || "error" in response) {
-    console.error(error);
-    throw new Error("Failed to fetch OKR");
-  }
-
-  return <OkrChart id={id} initialData={response.data.okr} />;
+  return <OkrChart id={id} initialData={okrData} />;
 }

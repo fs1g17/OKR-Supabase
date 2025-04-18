@@ -14,24 +14,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useFormState } from "react-dom";
-import { signIn } from "@/app/actions/sign-in";
-import { useRef } from "react";
-
-const initialState = {
-  success: false,
-  message: "",
-};
+import { useState } from "react";
+import { signIn } from "@/supabase/supabase";
 
 export default function SignIn() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(signIn, initialState);
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  console.log(state);
-
-  const handleSubmit = async (evt: React.FormEvent) => {
-    evt.preventDefault();
-    formAction(new FormData(formRef.current!));
+  const handleClick = () => {
+    signIn({ email, password })
+      .then(() => {
+        console.log("success");
+        window.location.href = "/list";
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -40,29 +38,38 @@ export default function SignIn() {
         <CardTitle>Welcome Back!</CardTitle>
         <CardDescription>Sign in to access your OKRs.</CardDescription>
       </CardHeader>
-      <form ref={formRef} onSubmit={handleSubmit}>
-        <CardContent>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="username">Username</Label>
-              <Input id="username" name="username" placeholder="Username" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" placeholder="Password" />
-            </div>
+      <CardContent>
+        <div className="grid w-full items-center gap-4">
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              name="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
           </div>
-          {state.message !== "" && (
-            <div className="text-destructive">{state.message}</div>
-          )}
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Link href="/sign-up">
-            <Button variant="outline">Sign Up</Button>
-          </Link>
-          <Button type="submit">Sign In</Button>
-        </CardFooter>
-      </form>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              name="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Link href="/sign-up">
+          <Button variant="outline">Sign Up</Button>
+        </Link>
+        <Button type="submit" onClick={handleClick}>
+          Sign In
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

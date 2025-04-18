@@ -1,16 +1,18 @@
-import { ssrFetch } from "@/lib/server-side-fetching";
-import { BackendResponse, OkrType } from "@/types/response";
+"use client";
+
+import { OkrType } from "@/types/response";
+import { useEffect, useState } from "react";
 import ListOkrs from "./components/ListOkrs";
+import { getOkrsInfo } from "@/supabase/supabase";
 
-export default async function List() {
-  const [response, error] = await ssrFetch<BackendResponse<Omit<OkrType,"okr">[]>>("/api/okr/list", {
-    method: "GET",
-  });
+export default function List() {
+  const [okrList, setOkrList] = useState<Omit<OkrType, "okr">[]>([]);
 
-  if (error || !response || "error" in response) {
-    console.error(error);
-    throw new Error("Failed to fetch OKRs");
-  }
+  useEffect(() => {
+    (async () => {
+      setOkrList(await getOkrsInfo());
+    })();
+  }, []);
 
-  return <ListOkrs list={response.data} />;
+  return <ListOkrs list={okrList} />;
 }

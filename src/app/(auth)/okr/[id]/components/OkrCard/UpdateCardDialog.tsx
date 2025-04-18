@@ -9,31 +9,22 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { DialogClose, DialogTrigger } from "@radix-ui/react-dialog";
 
 export default function UpdateCardDialog({
-  open,
+  children,
   objective,
-  description,
-  closeDialog,
-  updateCard,
+  updateObjective,
 }: {
-  open: boolean;
+  children: React.ReactNode;
   objective: string;
-  description: string;
-  closeDialog: () => void;
-  updateCard: ({
-    description,
-    objective,
-  }: {
-    description: string;
-    objective: string;
-  }) => void;
+  updateObjective: (objective: string) => void;
 }) {
   const [newObjective, setNewObjective] = useState<string>(objective);
-  const [newDescription, setNewDescription] = useState<string>(description);
 
   return (
-    <Dialog open={open} onOpenChange={closeDialog}>
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Update Objective</DialogTitle>
@@ -47,27 +38,13 @@ export default function UpdateCardDialog({
               onChange={(e) => setNewObjective(e.currentTarget.value)}
             />
           </div>
-          <div className="grid flex-1 gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.currentTarget.value)}
-            />
-          </div>
         </div>
         <DialogFooter>
-          <Button
-            onClick={() => {
-              updateCard({
-                description: newDescription,
-                objective: newObjective,
-              });
-              closeDialog();
-            }}
-          >
-            Update
-          </Button>
+          <DialogClose>
+            <Button onClick={() => updateObjective(newObjective)}>
+              Update
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
