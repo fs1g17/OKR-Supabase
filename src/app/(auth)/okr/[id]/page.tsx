@@ -2,6 +2,7 @@
 
 import OkrChart from "./components/OkrChart";
 import { getOkr } from "@/supabase/supabase";
+import { OkrRow } from "@/types/supabase";
 import { useEffect, useState } from "react";
 
 export default function OkrPage({
@@ -10,13 +11,13 @@ export default function OkrPage({
   params: { [key: string]: string };
 }) {
   const id = params["id"];
-  const [okrData, setOkrData] = useState<OkrData>()
+  const [okrRow, setOkrRow] = useState<OkrRow>()
   
   useEffect(() => {
-    (async () => {setOkrData(await getOkr(parseInt(id)))})();
+    (async () => {setOkrRow(await getOkr(parseInt(id)))})();
   }, []);
 
-  if (!okrData) return <div>Loading...</div>;
+  if (!okrRow) return <div>Loading...</div>;
 
-  return <OkrChart id={id} initialData={okrData} />;
+  return <OkrChart id={id} initialData={okrRow} />;
 }

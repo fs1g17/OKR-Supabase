@@ -64,14 +64,14 @@ export async function getOkrsInfo(): Promise<
   return data as Omit<OkrRow, "createdBy" | "value">[];
 }
 
-export async function getOkr(id: number): Promise<OkrData> {
+export async function getOkr(id: number): Promise<OkrRow> {
   const { data, error } = await createClient().from("okrs").select("*").eq("id", id);
 
   if (error) {
     throw new Error("Failed to fetch OKR");
   }
 
-  return (data[0] as OkrRow).value;
+  return data[0] as OkrRow;
 }
 
 export async function saveOkr({
@@ -85,5 +85,13 @@ export async function saveOkr({
 
   if (error) {
     throw new Error("Failed to save OKR");
+  }
+}
+
+export async function deleteOkr(id: number): Promise<void> {
+  const { error } = await createClient().from("okrs").delete().eq("id", id)
+
+  if (error) {
+    throw new Error("Failed to delete OKR");
   }
 }
