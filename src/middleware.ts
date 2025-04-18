@@ -1,29 +1,17 @@
-// middleware.ts
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
-import { NextResponse, type NextRequest } from "next/server";
-
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
-
-  const supabase = createMiddlewareClient({ req, res });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Protect routes starting with /dashboard or whatever
-  const path = req.nextUrl.pathname;
-  const isProtectedRoute = path.startsWith("/list") || path.startsWith("/okr") || path.startsWith("/test");
-
-  //TODO: fix middleware
-  // if (isProtectedRoute && !user) {
-  //   // Redirect to login
-  //   const loginUrl = new URL("/sign-in", req.url);
-  //   return NextResponse.redirect(loginUrl);
-  // }
-
-  return res;
+import { type NextRequest } from "next/server";
+import { updateSession } from "@/supabase/middleware";
+export async function middleware(request: NextRequest) {
+  return await updateSession(request);
 }
-
 export const config = {
-  matcher: ["/list/:path*", "/okr/:path*", "/test/:path*"], // add protected routes here
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
