@@ -1,9 +1,7 @@
 "use client";
 
 import OkrChart from "./components/OkrChart";
-import { ssrFetch } from "@/lib/server-side-fetching";
 import { getOkr } from "@/supabase/supabase";
-import { BackendResponse, OkrType } from "@/types/response";
 import { useEffect, useState } from "react";
 
 export default function OkrPage({

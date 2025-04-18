@@ -13,15 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRef, useState } from "react";
-import { useFormState } from "react-dom";
-import { newOkr } from "../actions/NewOkr";
+import { useState } from "react";
 import { makeOkr } from "@/supabase/supabase";
-
-const initialState = {
-  success: false,
-  message: "",
-};
 
 export default function NewOkrDialog({
   children,
