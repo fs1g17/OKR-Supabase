@@ -46,7 +46,7 @@ export default function useOkrSvg(initialData: OkrData) {
     svg.call(zoomBehavior as any);
 
     const root = hierarchy(data.data);
-    const treeLayout = tree().size([width * multiplier - 100, height - 200]);
+    const treeLayout = tree().size([width * multiplier - 100, height*multiplier- 200]);
     treeLayout(root);
     const paths = treeLayout(root).links();
 
